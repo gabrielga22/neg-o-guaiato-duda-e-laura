@@ -1,0 +1,19 @@
+body {
+    background-image: url("./assets/imagens/O\ preço\ do\ conhecimento\ em\ Hollow\ Creek.png");
+    background-size: cover;      /* Faz a imagem cobrir toda a área */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat;/* Evita repetição */
+    background-attachment: fixed;/* Opcional: fixa o fundo ao rolar a página */
+  }
+
+  h1{
+    color:rgb(10, 98, 175)
+  }
+
+  button{
+
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
