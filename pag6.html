@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Creek: O Loop</title>
+    <style>
+        /* --- CSS RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill:rgba(200,0,0,0.8);"><circle cx="10" cy="10" r="5"/></svg>'), auto; /* Cursor customizado vermelho */
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #b0b0b0;
+            font-family: 'Courier New', Courier, monospace; /* Fonte máquina de escrever padrão */
+            overflow: hidden; /* Impede scroll da página */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- EFEITOS DE ATMOSFERA --- */
+        
+        /* Ruído visual de fundo (Grain) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABlBMVEUAAAD///+l2Z/dAAAAbUlEQVR4XuwYwQqAMAzb//9S6UVDm4M34Xit9S9XNBEpI6Kcz9fX09OTXAnI/H5+fT25EpD5/f76enIlIPMbcDoU0H7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7b55f5AF0OAnfL/7KCAAAAAElFTkSuQmCC');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Vinheta gótica (bordas escuras) */
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Efeito de iluminação sutil (lanterna) seguindo o mouse */
+        .flashlight {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,230,0.05) 0%, rgba(0,0,0,0) 30%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* --- CONTAINER DO JOGO --- */
+        #game-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            max-height: 600px;
+            background-color: #050505;
+            border: 2px solid #202020;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(200,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        /* Borda desgastada gótica nas cantoneiras */
+        #game-container::before {
+            content: "";
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px solid #1a0000;
+            pointer-events: none;
+        }
+
+        /* --- CAIXA DE DIÁLOGO --- */
+        #dialogue-section {
+            flex: 1;
+            overflow-y: auto; /* Permite scroll se o texto for longo */
+            padding-right: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Scrollbar estilizada (suja/escura) */
+        #dialogue-section::-webkit-scrollbar { width: 5px; }
+        #dialogue-section::-webkit-scrollbar-track { background: #080808; }
+        #dialogue-section::-webkit-scrollbar-thumb { background: #300000; }
+
+        .text-node {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            visibility: hidden; /* Controlado pelo JS */
+        }
+
+        .text-node.visible {
+            visibility: visible;
+        }
+
+        /* Estilo para diálogos falados */
+        .character-speech {
+            color: #c0c0c0;
+            border-left: 3px solid #300000;
+            padding-left: 10px;
+            margin-left: 5px;
+        }
+
+        /* Estilo para pensamentos ou ênfase horrorosa */
+        .horror-emphasis {
+            color: #900;
+            font-weight: bold;
+            animation: flicker 2s infinite;
+        }
+
+        /* --- SEÇÃO DE ESCOLHAS --- */
+        #choices-section {
+            height: auto;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid #202020;
+            padding-top: 15px;
+        }
+
+        .choice-button {
+            display: block;
+            width: 100%;
+            background: none;
+            background-color: #0a0a0a;
+            border: 1px solid #303030;
+            color: #808080;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            text-align: left;
+            transition: all 0.2s ease;
+            opacity: 0; /* Começa invisível */
+            transform: translateY(10px);
+        }
+
+        .choice-button.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .choice-button:hover:not(:disabled) {
+            background-color: #1a0000;
+            border-color: #600000;
+            color: #ff4444;
+            box-shadow: 0 0 10px rgba(100, 0, 0, 0.3);
+        }
+
+        .choice-button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        /* --- ANIMAÇÕES --- */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            52% { opacity: 1; }
+            54% { opacity: 0.7; }
+            56% { opacity: 1; }
+        }
+
+        /* Esconde o elemento mas mantém espaço (para o efeito typewriter) */
+        .is-typing::after {
+            content: "|";
+            animation: flicker 0.5s infinite;
+            color: #900;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="vignette"></div>
+    <div class="flashlight" id="flashlight"></div>
+
+    <div id="game-container">
+        <div id="dialogue-section">
+            <div id="text-container">
+                <!-- Texto inserido pelo JS -->
+            </div>
+            <!-- Elemento invisível para forçar o scroll para baixo -->
+            <div id="scroll-anchor"></div>
+        </div>
+
+        <div id="choices-section">
+            <!-- Botões inseridos pelo JS -->
+        </div>
+    </div>
+
+    <script>
+        /* --- CONFIGURAÇÃO DA NARRATIVA --- */
+        // Estrutura do jogo dividida em "nós" (cenas)
+        const story = {
+            scene1: {
+                text: [
+                    "O PRIMEIRO LOOP",
+                    "Independentemente da escolha anterior, uma certeza se instala no peito de todos: Hollow Creek não funciona como uma cidade comum."
+                ],
+                choices: [
+                    { text: "Arthur tenta sair.", target: "scene2" }
+                ]
+            },
+            scene2: {
+                text: [
+                    "Arthur segura firme o volante. O motor ronca, lutando contra a chuva pesada.",
+                    "Ele dirige durante quase vinte minutos pela estrada escura.",
+                    "Vira à esquerda em uma bifurcação antiga.",
+                    "Depois à direita, seguindo placas desgastadas.",
+                    "Segue em frente, a floresta opressora ladeando a pista.",
+                    "Finalmente, retorna pela avenida principal de Hollow Creek, esperando ver a saída da cidade."
+                ],
+                choices: [
+                    { text: "Então...", target: "scene3" }
+                ]
+            },
+            scene3: {
+                text: [
+                    "A luz dos faróis corta a neblina.",
+                    "O mesmo posto de gasolina abandonado.",
+                    "A mesma igreja de pedra gótica.",
+                    "O mesmo motel com o letreiro neon piscando fracamente.",
+                    "Tudo exatamente no mesmo lugar.",
+                    "Até as gotas de chuva pareciam cair da mesma maneira hipnótica e errada."
+                ],
+                choices: [
+                    { text: "Noah reage.", target: "scene4" }
+                ]
+            },
+            scene4: {
+                text: [
+                    "<span class='character-speech'>Noah soca o painel do carro com violência. O som abafado ecoa no interior claustrofóbico.</span>",
+                    "<span class='character-speech'>— Isso é impossível!</span>",
+                    "Arthur não responde. Ele acelera novamente, o pânico subindo pela garganta.",
+                    "O carro percorre quilômetros. O velocímetro sobe.",
+                    "Mas a estrada se dobra. A lógica falha.",
+                    "Eles sempre retornam ao mesmo ponto inicial."
+                ],
+                choices: [
+                    { text: "A compreensão de Evelyn.", target: "scene5" }
+                ]
+            },
+            scene5: {
+                text: [
+                    "O silêncio no carro só é quebrado pelo som dos limpadores de para-brisa.",
+                    "Foi então que Evelyn compreendeu. A verdade fria se instalou em sua mente.",
+                    "<span class='character-speech'>— Não estamos presos em uma cidade...</span>",
+                    "Ela respirou fundo, o ar parecendo faltar.",
+                    "<span class='character-speech'>Estamos presos <span class='horror-emphasis'>dentro</span> dela.</span>"
+                ],
+                choices: [
+                    { text: "O Loop continua...", target: "restart" } // Mecânica de fim/loop
+                ]
+            }
+        };
+
+        /* --- MOTOR DO JOGO (ENGINE) --- */
+        
+        const textContainer = document.getElementById('text-container');
+        const choicesSection = document.getElementById('choices-section');
+        const dialogueSection = document.getElementById('dialogue-section');
+        const scrollAnchor = document.getElementById('scroll-anchor');
+        
+        const TYPE_SPEED = 30; // Milissegundos por caractere
+        let isTyping = false;
+        let currentAudioSource = null;
+
+        // Inicializa o Contexto de Áudio para sons sintéticos (sem arquivos)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = AudioContext ? new AudioContext() : null;
+
+        // Função para tocar um som curto de "tecla" (typewriter)
+        function playTypeSound() {
+            if (!audioCtx) return;
+            // Cria oscilador para som curto e grave
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine'; // Som suave
+            oscillator.frequency.setValueAtTime(100 + (Math.random() * 50), audioCtx.currentTime); // Frequência baixa aleatória
+            gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime); // Volume bem baixo
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // Função principal do efeito Typewriter
+        function typeWriter(element, text, index, callback) {
+            if (index < text.length) {
+                isTyping = true;
+                
+                // Trata HTML (como tags span) para não digitar a tag caractere por caractere
+                if (text[index] === '<') {
+                    let tagEnd = text.indexOf('>', index);
+                    if (tagEnd !== -1) {
+                        element.innerHTML += text.substring(index, tagEnd + 1);
+                        index = tagEnd + 1;
+                        // Continua imediatamente após a tag
+                        typeWriter(element, text, index, callback);
+                        return;
+                    }
+                }
+
+                element.innerHTML += text[index];
+                
+                // Toca som a cada poucos caracteres para não ficar irritante
+                if (index % 3 === 0) playTypeSound();
+
+                // Auto-scroll para baixo enquanto digita
+                scrollAnchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                
+                setTimeout(() => typeWriter(element, text, index + 1, callback), TYPE_SPEED);
+            } else {
+                isTyping = false;
+                element.classList.remove('is-typing');
+                callback();
+            }
+        }
+
+        // Exibe um bloco de texto completo (múltiplos parágrafos) caractere por caractere
+        function displayTextBlock(textArray, callback) {
+            let pIndex = 0;
+
+            function nextParagraph() {
+                if (pIndex < textArray.length) {
+                    const p = document.createElement('p');
+                    p.classList.add('text-node', 'is-typing');
+                    textContainer.appendChild(p);
+                    p.classList.add('visible'); // Torna o container visível antes de digitar
+                    
+                    typeWriter(p, textArray[pIndex], 0, () => {
+                        pIndex++;
+                        // Pequena pausa entre parágrafos
+                        setTimeout(nextParagraph, 500);
+                    });
+                } else {
+                    if (callback) callback();
+                }
+            }
+            nextParagraph();
+        }
+
+        // Mostra os botões de escolha
+        function showChoices(choices) {
+            choicesSection.innerHTML = ''; // Limpa escolhas anteriores
+            
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.classList.add('choice-btn', 'choice-button'); // Usando classes corretas
+                button.innerHTML = `> ${choice.text}`;
+                
+                button.addEventListener('click', () => {
+                    if (!isTyping) {
+                        if (choice.target === 'restart') {
+                            location.reload(); // Mecânica de Loop recarrega a página
+                        } else {
+                            renderScene(choice.target);
+                        }
+                    }
+                });
+                
+                choicesSection.appendChild(button);
+                
+                // Animação de entrada dos botões (fade in cascata)
+                setTimeout(() => {
+                    button.classList.add('show');
+                }, index * 300 + 500);
+            });
+        }
+
+        // Função principal para renderizar uma cena
+        function renderScene(sceneId) {
+            const scene = story[sceneId];
+            if (!scene) return;
+
+            choicesSection.innerHTML = ''; // Esconde escolhas enquanto digita
+            
+            // Opcional: Limpar texto anterior a cada cena ou acumular?
+            // Para visual novel gótica, acumular parece mais opressor.
+            // textContainer.innerHTML = ''; 
+
+            displayTextBlock(scene.text, () => {
+                showChoices(scene.choices);
+            });
+        }
+
+        /* --- EFEITOS INTERATIVOS --- */
+        
+        // Efeito da lanterna seguindo o mouse
+        const flashlight = document.getElementById('flashlight');
+        window.addEventListener('mousemove', e => {
+            flashlight.style.setProperty('--x', e.clientX + 'px');
+            flashlight.style.setProperty('--y', e.clientY + 'px');
+        });
+
+        /* --- INICIALIZAÇÃO --- */
+        
+        // Inicia o jogo na primeira cena
+        // Nota: Navegadores modernos bloqueiam áudio automático.
+        // O som só tocará após a primeira interação (clique) do usuário.
+        renderScene('scene1');
+
+    </script>
+</body>
+</html>
