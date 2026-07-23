@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Creek: A Manhã Seguinte</title>
+    <style>
+        /* --- ESTILOS CSS (A Estética) --- */
+        
+        /* Importando fonte estilo máquina de escrever retro do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Fundo preto absoluto */
+            color: #b0b0b0; /* Texto cinza claro para não cansar */
+            font-family: 'Special Elite', 'Courier New', Courier, monospace;
+            overflow: hidden; /* Impede scroll da página */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none; /* Impede selecionar texto para manter a imersão */
+        }
+
+        /* Efeito visual de Vinheta gótica (bordas escuras) */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Efeito de iluminação de lanterna sutil seguindo o mouse */
+        .flashlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 220, 0.03) 0%, rgba(0,0,0,0) 20%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Efeito de Chuva estática no fundo */
+        .rain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36z8gAFWNoYGAEC8IE4UIwQZgAVQEAV5QOEnX6D4gAAAAASUVORK5CYII='); /* Textura de ruído micro */
+            opacity: 0.1;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Container Principal do Jogo */
+        #game-container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Título do Jogo (canto superior esquerdo) */
+        header {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            color: #404040; /* Cinza bem escuro para o título */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        /* Caixa de Diálogo Estilizada (Estilo Papel Desgastado) */
+        #dialogue-box {
+            background-color: #050505; /* Quase preto */
+            border: 2px solid #1a1a1a; /* Borda escura desgastada */
+            border-radius: 4px;
+            padding: 30px;
+            width: 100%;
+            max-width: 650px;
+            min-height: 250px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(200, 0, 0, 0.05); /* Sombra externa e brilho interno vermelho sutil */
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Bordas decorativas góticas nos cantos */
+        #dialogue-box::before, #dialogue-box::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #303030;
+        }
+        #dialogue-box::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+        #dialogue-box::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+
+        /* Estilo do Texto */
+        #text-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        /* Destaques em Vermelho Sutil */
+        .highlight {
+            color: #800000;
+            font-weight: bold;
+        }
+
+        /* Cursor piscante do efeito typewriter */
+        #cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background-color: #b0b0b0;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Seção de Botões de Escolha */
+        #choices-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        /* Botões Estilizados */
+        .choice-btn {
+            background: none;
+            background-color: #0a0a0a; /* Fundo quase preto */
+            color: #606060; /* Texto cinza */
+            border: 1px solid #1a1a1a;
+            border-radius: 2px;
+            padding: 12px 24px;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: auto;
+            min-width: 250px;
+            text-align: center;
+            opacity: 0; /* Começa invisível para animação */
+        }
+
+        /* Animação de aparecimento dos botões */
+        .choice-btn.fade-in {
+            animation: fadeInButton 0.8s forwards;
+        }
+
+        @keyframes fadeInButton {
+            to { opacity: 1; }
+        }
+
+        /* Hover do Botão: Gótico e Intimidador */
+        .choice-btn:hover:not(:disabled) {
+            background-color: #1a0000; /* Fundo vermelho muito escuro */
+            border-color: #800000; /* Borda vermelha sangue */
+            color: #ff3333; /* Texto vermelho brilhante */
+            box-shadow: 0 0 10px rgba(128, 0, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .choice-btn:disabled {
+            cursor: default;
+            opacity: 0.3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Efeitos Visuais de Atmosfera -->
+    <div class="vignette"></div>
+    <div class="flashlight" id="flashlight"></div>
+    <div class="rain-overlay"></div>
+
+    <div id="game-container">
+        <header>
+            <h1>Hollow Creek</h1>
+        </header>
+
+        <div id="dialogue-box">
+            <div id="text-content">
+                <!-- O texto do jogo aparecerá aqui -->
+            </div>
+        </div>
+
+        <div id="choices-container">
+            <!-- Os botões de escolha aparecerão aqui -->
+        </div>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT (As Mecânicas e a História) --- */
+
+        // Dados da História (Cenas)
+        const storyData = {
+            start: {
+                title: "A Manhã Seguinte",
+                text: "Arthur acorda primeiro. Abre lentamente a porta do carro. O frio da manhã invade o ambiente. Ele olha para o banco traseiro. Congela.",
+                choices: [
+                    { text: "Olhar para o banco traseiro", target: "desaparecimento" }
+                ]
+            },
+            desaparecimento: {
+                title: "O Vazio",
+                text: "O corpo desapareceu. Nenhuma marca de sangue. Nenhum sinal de luta. Nenhuma pegada na lama ao redor.",
+                choices: [
+                    { text: "Procurar pistas no carro", target: "simbolo" }
+                ]
+            },
+            simbolo: {
+                title: "A Mensagem",
+                text: "Arthur nota algo. Apenas um <span class='highlight'>símbolo</span> desenhado no vidro embaçado. Ao lado dele, escrito com um dedo:",
+                choices: [
+                    { text: "Ler a inscrição", target: "conclusao" }
+                ]
+            },
+            conclusao: {
+                title: "A Verdade",
+                text: "Naquele instante, os sobreviventes compreendem uma verdade aterradora. Hollow Creek não é apenas uma cidade.",
+                choices: [
+                    { text: "É uma prisão.", target: "end" }
+                ]
+            },
+            end: {
+                title: "Sem Saída",
+                text: "A névoa lá fora parece zombar deles. O loop recomeça. (é a noite acaba)",
+                choices: [
+                    { text: "Recomeçar Pesadelo", target: "start" }
+                ]
+            }
+        };
+
+        // Configurações do Efeito Typewriter
+        const TYPE_SPEED = 40; // Velocidade em milissegundos por caractere
+        let typingTimeout;
+        let isTyping = false;
+
+        // Elementos HTML
+        const textContent = document.getElementById('text-content');
+        const choicesContainer = document.getElementById('choices-container');
+        const flashlight = document.getElementById('flashlight');
+        const headerTitle = document.querySelector('header h1');
+
+        // Função principal para renderizar uma cena
+        function renderScene(sceneId) {
+            const scene = storyData[sceneId];
+            if (!scene) return;
+
+            // Atualiza o título (opcional, para ambientação)
+            headerTitle.innerText = `Hollow Creek - ${scene.title}`;
+            
+            // Limpa o contêiner de escolhas enquanto o texto digita
+            choicesContainer.innerHTML = '';
+            
+            // Inicia o efeito de digitação
+            typeText(scene.text, () => {
+                // Quando terminar de digitar, mostra as escolhas
+                showChoices(scene.choices);
+            });
+        }
+
+        // Função do Efeito Typewriter (revela texto aos poucos)
+        function typeText(text, onComplete) {
+            isTyping = true;
+            textContent.innerHTML = ''; // Limpa texto anterior
+            
+            // Adiciona o cursor piscante
+            const cursorSpan = document.createElement('span');
+            cursorSpan.id = 'cursor';
+            
+            // Para lidar com HTML dentro do texto (como a tag span.highlight)
+            let currentText = '';
+            let htmlBuffer = '';
+            let isInsideTag = false;
+            let charIndex = 0;
+
+            function typeChar() {
+                if (charIndex < text.length) {
+                    const char = text[charIndex];
+                    
+                    if (char === '<') {
+                        isInsideTag = true;
+                    }
+                    
+                    if (isInsideTag) {
+                        htmlBuffer += char;
+                        if (char === '>') {
+                            isInsideTag = false;
+                            currentText += htmlBuffer;
+                            htmlBuffer = '';
+                        }
+                    } else {
+                        currentText += char;
+                    }
+
+                    textContent.innerHTML = currentText;
+                    textContent.appendChild(cursorSpan); // Mantém o cursor no final
+                    
+                    charIndex++;
+                    typingTimeout = setTimeout(typeChar, TYPE_SPEED);
+                } else {
+                    // Finalizou a digitação
+                    isTyping = false;
+                    // Remove o cursor se quiser, ou mantém piscando
+                    // textContent.removeChild(cursorSpan); 
+                    if (onComplete) onComplete();
+                }
+            }
+
+            typeChar();
+        }
+
+        // Função para mostrar os botões de escolha
+        function showChoices(choices) {
+            choicesContainer.innerHTML = ''; // Limpa botões anteriores
+            
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.classList.add('choice-btn');
+                button.innerHTML = `> ${choice.text}`;
+                
+                // Adiciona o evento de clique para avançar a história
+                button.addEventListener('click', () => {
+                    if (!isTyping) {
+                        renderScene(choice.target);
+                    }
+                });
+                
+                // Adiciona ao container
+                choicesContainer.appendChild(button);
+                
+                // Animação de entrada cascata (um botão após o outro)
+                setTimeout(() => {
+                    button.classList.add('fade-in');
+                }, index * 200); // Atraso baseado no índice
+            });
+        }
+
+        // Efeito de Lanterna seguindo o mouse (CSS Variable update)
+        window.addEventListener('mousemove', e => {
+            flashlight.style.setProperty('--mouse-x', e.clientX + 'px');
+            flashlight.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        // Iniciar o jogo na primeira cena
+        renderScene('start');
+
+    </script>
+</body>
+</html>
