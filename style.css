@@ -1,0 +1,599 @@
+:root{
+    --preto-absoluto: #050505;
+    --preto-fundo: #0B0B0B;
+    --cinza-escuro: #141414;
+ 
+    --vermelho-sangue: #8B0000;
+    --vermelho-ritual: #B11226;
+    --vermelho-brilho: #D32F2F;
+ 
+    --branco-fosco: #D8D4CF;
+    --cinza-nevoa: #9A9A9A;
+ 
+    --sombra: rgba(0,0,0,0.85);
+}
+body{
+    margin:0;
+    background:
+        radial-gradient(circle at center,
+        #141414 0%,
+        #0B0B0B 45%,
+        #050505 100%);
+ 
+    color: var(--branco-fosco);
+    font-family: 'Cinzel', serif;
+    overflow:hidden;
+}
+.game-title{
+    color: var(--branco-fosco);
+    text-transform: uppercase;
+    letter-spacing: 6px;
+ 
+    text-shadow:
+        0 0 10px rgba(255,255,255,.08),
+        0 0 25px rgba(177,18,38,.35);
+ 
+    font-size: 4rem;
+}
+.character-card{
+    background: linear-gradient(
+        180deg,
+        rgba(20,20,20,.95),
+        rgba(5,5,5,.98)
+    );
+ 
+    border: 1px solid rgba(177,18,38,.45);
+ 
+    box-shadow:
+        0 0 20px rgba(0,0,0,.9),
+        inset 0 0 15px rgba(177,18,38,.08);
+ 
+    transition: .3s;
+}
+.character-card:hover,
+.character-card.selected{
+ 
+    border: 1px solid var(--vermelho-brilho);
+ 
+    box-shadow:
+        0 0 30px rgba(211,47,47,.35),
+        0 0 60px rgba(211,47,47,.15);
+ 
+    transform: translateY(-4px);
+}
+.character-card:hover,
+.character-card.selected{
+ 
+    border: 1px solid var(--vermelho-brilho);
+ 
+    box-shadow:
+        0 0 30px rgba(211,47,47,.35),
+        0 0 60px rgba(211,47,47,.15);
+ 
+    transform: translateY(-4px);
+}
+.sanity-low{
+    animation: glitch 0.3s infinite;
+    filter: contrast(120%) brightness(90%);
+}
+ 
+@keyframes glitch{
+ 
+    0%{
+        transform:translate(0);
+    }
+ 
+    25%{
+        transform:translate(-2px,1px);
+    }
+ 
+    50%{
+        transform:translate(2px,-1px);
+    }
+ 
+    75%{
+        transform:translate(-1px,-2px);
+    }
+ 
+    100%{
+        transform:translate(0);
+    }
+}
+.choice-screen{
+    background:
+        linear-gradient(
+            rgba(0,0,0,.85),
+            rgba(0,0,0,.95)
+        ),
+        url("hollow-creek.jpg");
+ 
+    background-size:cover;
+}
+ 
+.lucas-warning{
+    color:#D32F2F;
+ 
+    text-shadow:
+        0 0 10px #D32F2F,
+        0 0 25px rgba(211,47,47,.5);
+ 
+    animation:pulse 2s infinite;
+}
+ 
+@keyframes pulse{
+    50%{
+        opacity:.6;
+    }
+}
+ 
+!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Hollow Creek</title> <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap%22 rel="stylesheet"> <style> *{     margin:0;     padding:0;     box-sizing:border-box; } body{     background:#0b0b0b;     color:#e5e5e5;     font-family:'Inter',sans-serif;     line-height:1.7; } header{     height:100vh;     background:     linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),     url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');     background-size:cover;     background-position:center;     display:flex;     flex-direction:column;     justify-content:center;     align-items:center;     text-align:center;     padding:20px; } header h1{     font-size:5rem;     font-family:'Cinzel',serif;     color:#c00000;     text-shadow:0 0 25px red; } header p{     margin-top:20px;     font-size:1.4rem;     max-width:800px; } section{     max-width:1200px;     margin:auto;     padding:80px 20px; } h2{     color:#c00000;     font-family:'Cinzel',serif;     margin-bottom:30px;     font-size:2.5rem; } .cards{     display:grid;     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));     gap:25px; } .card{     background:#151515;     border:1px solid #333;     padding:25px;     border-radius:12px;     transition:.3s; } .card:hover{     transform:translateY(-8px);     border-color:#c00000;     box-shadow:0 0 20px rgba(255,0,0,.25); } .card h3{     color:#ff4444;     margin-bottom:10px; } .story{     background:#111;     border-left:5px solid #c00000;     padding:30px;     border-radius:8px; } .choice{     background:#181818;     margin-top:20px;     padding:20px;     border-radius:10px; } .choice h4{     color:#ff5555;     margin-bottom:10px; } .creatures{     background:#111;     text-align:center;     border-radius:12px;     padding:40px; } .creatures ul{     list-style:none;     margin-top:20px; } .creatures li{     padding:10px; } .finals{     display:grid;     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));     gap:20px; } .final{     background:#151515;     padding:25px;     border-radius:12px;     border:1px solid #333; } .quote{     text-align:center;     font-size:2rem;     font-family:'Cinzel',serif;     color:#ff4444;     padding:100px 20px; } footer{     text-align:center;     padding:40px;     background:#050505;     color:#888; } </style> </head> <body> <header>     <h1>HOLLOW CREEK</h1>     <p>         Uma cidade esquecida pelo mundo.         Uma estrada sem saída.         Um segredo que nunca deveria ser descoberto.     </p> </header> <section> <h2>Os Personagens</h2> <div class="cards"> <div class="card"> <h3>Arthur "Art" Hale</h3> <p> Ex-policial. Líder do grupo. Frio, racional e armado. Carrega a culpa pela morte da esposa. </p> </div> <div class="card"> <h3>Evelyn Carter</h3> <p> Especialista em ocultismo. Obcecada por símbolos antigos. Acredita que o sobrenatural possui regras. </p> </div> <div class="card"> <h3>Noah Briggs</h3> <p> Mecânico e caçador. Impulsivo e supersticioso. Acredita que toda criatura pode morrer. </p> </div> <div class="card"> <h3>Lucas Reed</h3> <p> O mais novo do grupo. Documenta investigações. Ainda acredita que podem salvar pessoas. </p> </div> </div> </section> <section> <h2>Prólogo — A Casa Velha da Colina</h2> <div class="story"> <p> Ano: 2003. </p> <p> O grupo recebe cartas vindas de Black Pine County. As mensagens falam sobre vozes dentro das paredes, desaparecimentos misteriosos e luzes estranhas na floresta. </p> <p> No centro dos relatos existe uma antiga residência: a Casa Vidal. Abandonada desde 1978 após o desaparecimento de toda a família. </p> <p> Durante a exploração do porão, Lucas encontra uma porta secreta. Atrás dela existe um círculo ritualístico e um estranho artefato conhecido como: </p> <h3 style="margin-top:20px;color:#ff5555;"> O Ídolo Negro </h3> <p> Uma pequena estátua feita de algo parecido com madeira carbonizada, mas pulsando como carne viva. </p> </div> </section> <section> <h2>A Primeira Grande Escolha</h2> <div class="choice"> <h4>A) Tirar Lucas da Casa</h4> <p> Lucas sobrevive por mais tempo. Mas leva o Ídolo Negro escondido. </p> </div> <div class="choice"> <h4>B) Continuar Investigando</h4> <p> Mais pistas sobre Hollow Creek. Lucas piora rapidamente. </p> </div> <div class="choice"> <h4>C) Destruir o Objeto</h4> <p> O porão reage violentamente. Algo desperta na floresta. </p> </div> </section> <section> <h2>Hollow Creek</h2> <div class="story"> <p> A estrada desaparece. As placas mudam. O rádio transmite vozes antigas. </p> <p> Então surge uma cidade envolta pela neblina. Velha. Silenciosa. Parada no tempo. </p> <p> Quando tentam partir, sempre retornam ao mesmo lugar. </p> <p> Na manhã seguinte, Lucas desaparece. Seu corpo nunca é encontrado. </p> </div> </section> <section> <h2>As Criaturas</h2> <div class="creatures"> <p> Durante a noite, seres humanoides percorrem as ruas. Eles nunca correm. Porque sabem que ninguém consegue escapar. </p> <ul> <li>✓ Sorriem constantemente</li> <li>✓ Imitam vozes conhecidas</li> <li>✓ Pedem para entrar</li> <li>✓ Conhecem seus medos</li> <li>✓ Observam pelas janelas</li> </ul> </div> </section> <section> <h2>Sistema de Sanidade</h2> <div class="story"> <p> Quanto mais conhecimento sobrenatural os personagens obtêm, mais próximos ficam daquilo que observam. </p> <ul> <li>Ouvir vozes inexistentes</li> <li>Ver pessoas mortas</li> <li>Esquecer acontecimentos</li> <li>Desconfiar dos aliados</li> <li>Perder a própria identidade</li> </ul> </div> </section> <section> <h2>Finais Possíveis</h2> <div class="finals"> <div class="final"> <h3>Sacrifício</h3> <p> Alguém fica para trás para os outros escaparem. </p> </div> <div class="final"> <h3>Conhecimento</h3> <p> Evelyn descobre a verdade, mas perde completamente a sanidade. </p> </div> <div class="final"> <h3>O Retorno</h3> <p> O grupo sai da cidade... mas algo os acompanha. </p> </div> <div class="final"> <h3>Final Verdadeiro</h3> <p> O Ídolo Negro não trouxe eles para Hollow Creek. Ele trouxe Hollow Creek para eles. </p> </div> </div> </section> <div class="quote"> “Toda estrada leva para algum lugar.<br> Algumas só não deixam você voltar.” </div> <footer> HOLLOW CREEK © Horror Game Concept </footer> </body> </html>
+ 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hollow Creek</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    background:#0b0b0b;
+    color:#e5e5e5;
+    font-family:'Inter',sans-serif;
+    line-height:1.7;
+}
+header{
+    height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),
+    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+header h1{
+    font-size:5rem;
+    font-family:'Cinzel',serif;
+    color:#c00000;
+    text-shadow:0 0 25px red;
+}
+header p{
+    margin-top:20px;
+    font-size:1.4rem;
+    max-width:800px;
+}
+section{
+    max-width:1200px;
+    margin:auto;
+    padding:80px 20px;
+}
+h2{
+    color:#c00000;
+    font-family:'Cinzel',serif;
+    margin-bottom:30px;
+    font-size:2.5rem;
+}
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+.card{
+    background:#151515;
+    border:1px solid #333;
+    padding:25px;
+    border-radius:12px;
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#c00000;
+    box-shadow:0 0 20px rgba(255,0,0,.25);
+}
+.card h3{
+    color:#ff4444;
+    margin-bottom:10px;
+}
+.story{
+    background:#111;
+    border-left:5px solid #c00000;
+    padding:30px;
+    border-radius:8px;
+}
+.choice{
+    background:#181818;
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+}
+.choice h4{
+    color:#ff5555;
+    margin-bottom:10px;
+}
+.creatures{
+    background:#111;
+    text-align:center;
+    border-radius:12px;
+    padding:40px;
+}
+.creatures ul{
+    list-style:none;
+    margin-top:20px;
+}
+.creatures li{
+    padding:10px;
+}
+.finals{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+.final{
+    background:#151515;
+    padding:25px;
+    border-radius:12px;
+    border:1px solid #333;
+}
+.quote{
+    text-align:center;
+    font-size:2rem;
+    font-family:'Cinzel',serif;
+    color:#ff4444;
+    padding:100px 20px;
+}
+footer{
+    text-align:center;
+    padding:40px;
+    background:#050505;
+    color:#888;
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>HOLLOW CREEK</h1>
+    <p>
+        Uma cidade esquecida pelo mundo.
+        Uma estrada sem saída.
+        Um segredo que nunca deveria ser descoberto.
+    </p>
+</header>
+<section>
+<h2>Os Personagens</h2>
+<div class="cards">
+<div class="card">
+<h3>Arthur "Art" Hale</h3>
+<p>
+Ex-policial. Líder do grupo.
+Frio, racional e armado.
+Carrega a culpa pela morte da esposa.
+</p>
+</div>
+<div class="card">
+<h3>Evelyn Carter</h3>
+<p>
+Especialista em ocultismo.
+Obcecada por símbolos antigos.
+Acredita que o sobrenatural possui regras.
+</p>
+</div>
+<div class="card">
+<h3>Noah Briggs</h3>
+<p>
+Mecânico e caçador.
+Impulsivo e supersticioso.
+Acredita que toda criatura pode morrer.
+</p>
+</div>
+<div class="card">
+<h3>Lucas Reed</h3>
+<p>
+O mais novo do grupo.
+Documenta investigações.
+Ainda acredita que podem salvar pessoas.
+</p>
+</div>
+</div>
+</section>
+<section>
+<h2>Prólogo — A Casa Velha da Colina</h2>
+<div class="story">
+<p>
+Ano: 2003.
+</p>
+<p>
+O grupo recebe cartas vindas de Black Pine County.
+As mensagens falam sobre vozes dentro das paredes,
+desaparecimentos misteriosos e luzes estranhas na floresta.
+</p>
+<p>
+No centro dos relatos existe uma antiga residência:
+a Casa Vidal.
+Abandonada desde 1978 após o desaparecimento de toda a família.
+</p>
+<p>
+Durante a exploração do porão,
+Lucas encontra uma porta secreta.
+Atrás dela existe um círculo ritualístico
+e um estranho artefato conhecido como:
+</p>
+<h3 style="margin-top:20px;color:#ff5555;">
+O Ídolo Negro
+</h3>
+<p>
+Uma pequena estátua feita de algo parecido com madeira carbonizada,
+mas pulsando como carne viva.
+</p>
+</div>
+</section>
+<section>
+<h2>A Primeira Grande Escolha</h2>
+<div class="choice">
+<h4>A) Tirar Lucas da Casa</h4>
+<p>
+Lucas sobrevive por mais tempo.
+Mas leva o Ídolo Negro escondido.
+</p>
+</div>
+<div class="choice">
+<h4>B) Continuar Investigando</h4>
+<p>
+Mais pistas sobre Hollow Creek.
+Lucas piora rapidamente.
+</p>
+</div>
+<div class="choice">
+<h4>C) Destruir o Objeto</h4>
+<p>
+O porão reage violentamente.
+Algo desperta na floresta.
+</p>
+</div>
+</section>
+<section>
+<h2>Hollow Creek</h2>
+<div class="story">
+<p>
+A estrada desaparece.
+As placas mudam.
+O rádio transmite vozes antigas.
+</p>
+<p>
+Então surge uma cidade envolta pela neblina.
+Velha.
+Silenciosa.
+Parada no tempo.
+</p>
+<p>
+Quando tentam partir,
+sempre retornam ao mesmo lugar.
+</p>
+<p>
+Na manhã seguinte,
+Lucas desaparece.
+Seu corpo nunca é encontrado.
+</p>
+</div>
+</section>
+<section>
+<h2>As Criaturas</h2>
+<div class="creatures">
+<p>
+Durante a noite, seres humanoides percorrem as ruas.
+Eles nunca correm.
+Porque sabem que ninguém consegue escapar.
+</p>
+<ul>
+<li>✓ Sorriem constantemente</li>
+<li>✓ Imitam vozes conhecidas</li>
+<li>✓ Pedem para entrar</li>
+<li>✓ Conhecem seus medos</li>
+<li>✓ Observam pelas janelas</li>
+</ul>
+</div>
+</section>
+<section>
+<h2>Sistema de Sanidade</h2>
+<div class="story">
+<p>
+Quanto mais conhecimento sobrenatural os personagens obtêm,
+mais próximos ficam daquilo que observam.
+</p>
+<ul>
+<li>Ouvir vozes inexistentes</li>
+<li>Ver pessoas mortas</li>
+<li>Esquecer acontecimentos</li>
+<li>Desconfiar dos aliados</li>
+<li>Perder a própria identidade</li>
+</ul>
+</div>
+</section>
+<section>
+<h2>Finais Possíveis</h2>
+<div class="finals">
+<div class="final">
+<h3>Sacrifício</h3>
+<p>
+Alguém fica para trás para os outros escaparem.
+</p>
+</div>
+<div class="final">
+<h3>Conhecimento</h3>
+<p>
+Evelyn descobre a verdade,
+mas perde completamente a sanidade.
+</p>
+</div>
+<div class="final">
+<h3>O Retorno</h3>
+<p>
+O grupo sai da cidade...
+mas algo os acompanha.
+</p>
+</div>
+<div class="final">
+<h3>Final Verdadeiro</h3>
+<p>
+O Ídolo Negro não trouxe eles para Hollow Creek.
+Ele trouxe Hollow Creek para eles.
+</p>
+</div>
+</div>
+</section>
+<div class="quote">
+“Toda estrada leva para algum lugar.<br>
+Algumas só não deixam você voltar.”
+</div>
+<footer>
+HOLLOW CREEK © Horror Game Concept
+</footer>
+</body>
+</html>
+ 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    background:#0b0b0b;
+    color:#e5e5e5;
+    font-family:'Inter',sans-serif;
+    line-height:1.7;
+}
+header{
+    height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.9)),
+    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+header h1{
+    font-size:5rem;
+    font-family:'Cinzel',serif;
+    color:#c00000;
+    text-shadow:0 0 25px red;
+}
+header p{
+    margin-top:20px;
+    font-size:1.4rem;
+    max-width:800px;
+}
+section{
+    max-width:1200px;
+    margin:auto;
+    padding:80px 20px;
+}
+h2{
+    color:#c00000;
+    font-family:'Cinzel',serif;
+    margin-bottom:30px;
+    font-size:2.5rem;
+}
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+.card{
+    background:#151515;
+    border:1px solid #333;
+    padding:25px;
+    border-radius:12px;
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#c00000;
+    box-shadow:0 0 20px rgba(255,0,0,.25);
+}
+.card h3{
+    color:#ff4444;
+    margin-bottom:10px;
+}
+.story{
+    background:#111;
+    border-left:5px solid #c00000;
+    padding:30px;
+    border-radius:8px;
+}
+.choice{
+    background:#181818;
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+}
+.choice h4{
+    color:#ff5555;
+    margin-bottom:10px;
+}
+.creatures{
+    background:#111;
+    text-align:center;
+    border-radius:12px;
+    padding:40px;
+}
+.creatures ul{
+    list-style:none;
+    margin-top:20px;
+}
+.creatures li{
+    padding:10px;
+}
+.finals{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+.final{
+    background:#151515;
+    padding:25px;
+    border-radius:12px;
+    border:1px solid #333;
+}
+.quote{
+    text-align:center;
+    font-size:2rem;
+    font-family:'Cinzel',serif;
+    color:#ff4444;
+    padding:100px 20px;
+}
+footer{
+    text-align:center;
+    padding:40px;
+    background:#050505;
+    color:#888;
+}
+/* RESPONSIVO */
+@media(max-width:768px){
+    header h1{
+        font-size:3rem;
+    }
+    header p{
+        font-size:1rem;
+    }
+    h2{
+        font-size:2rem;
+    }
+    .quote{
+        font-size:1.5rem;
+    }
+}
+ 
