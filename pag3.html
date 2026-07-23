@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Price of Knowledge</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+background:#060606;
+font-family:'Special Elite', monospace;
+color:#ddd;
+overflow:hidden;
+
+background-image:
+linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.88)),
+url("casa.jpg");
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+
+}
+
+/* Chuva */
+
+.rain{
+
+position:fixed;
+width:100%;
+height:100%;
+pointer-events:none;
+background-image:
+linear-gradient(transparent 70%,rgba(255,255,255,.15));
+
+animation:rain 0.25s linear infinite;
+
+opacity:.35;
+
+}
+
+@keyframes rain{
+
+from{background-position:0 0;}
+to{background-position:-40px 120px;}
+
+}
+
+/* Vinheta */
+
+body::after{
+
+content:"";
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+
+box-shadow: inset 0 0 250px black;
+
+pointer-events:none;
+
+}
+
+/* Caixa */
+
+.container{
+
+width:100%;
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:flex-end;
+
+padding:40px;
+
+}
+
+.dialog{
+
+width:900px;
+min-height:260px;
+
+background:rgba(0,0,0,.82);
+
+border:2px solid #4b0000;
+
+box-shadow:
+0 0 25px rgba(120,0,0,.6);
+
+padding:30px;
+
+border-radius:6px;
+
+}
+
+h1{
+
+color:#b70000;
+
+margin-bottom:15px;
+
+text-shadow:0 0 10px red;
+
+letter-spacing:2px;
+
+}
+
+#texto{
+
+font-size:22px;
+
+line-height:38px;
+
+min-height:120px;
+
+color:#ddd;
+
+}
+
+.buttons{
+
+margin-top:30px;
+
+display:flex;
+
+gap:15px;
+
+}
+
+button{
+
+padding:12px 30px;
+
+background:#550000;
+
+color:white;
+
+border:none;
+
+cursor:pointer;
+
+font-family:inherit;
+
+font-size:18px;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+background:#990000;
+
+transform:scale(1.05);
+
+box-shadow:0 0 15px red;
+
+}
+
+.radio{
+
+position:absolute;
+
+top:20px;
+
+left:20px;
+
+font-size:15px;
+
+color:#999;
+
+opacity:.8;
+
+animation:pisca 2s infinite;
+
+}
+
+@keyframes pisca{
+
+50%{opacity:.2;}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="rain"></div>
+
+<div class="radio">
+
+📻 Rádio: "...zzzz...♪...não olhe para trás..."
+
+</div>
+
+<div class="container">
+
+<div class="dialog">
+
+<h1>PRÓLOGO</h1>
+
+<div id="texto"></div>
+
+<div class="buttons" id="botoes"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const cenas=[
+
+{
+texto:"A estrada parecia não ter fim. A chuva castigava o para-brisa enquanto Arthur mantinha as mãos firmes no volante.",
+
+opcoes:[
+{txt:"Continuar",prox:1}
+]
+},
+
+{
+texto:"Lucas respirava com dificuldade no banco traseiro. O rádio ligava sozinho, transmitindo músicas antigas interrompidas por vozes que ninguém reconhecia.",
+
+opcoes:[
+{txt:"Desligar o rádio",prox:2},
+{txt:"Ignorar",prox:2}
+]
+},
+
+{
+texto:"De repente, uma árvore gigantesca bloqueava completamente a estrada. Arthur tentou dar ré... o motor apagou.",
+
+opcoes:[
+{txt:"Tentar ligar o carro",prox:3}
+]
+},
+
+{
+texto:"Quando o motor voltou a funcionar, a estrada atrás deles havia desaparecido. Restava apenas uma direção.",
+
+opcoes:[
+{txt:"Seguir em frente",prox:4}
+]
+},
+
+{
+texto:"Poucos minutos depois, a neblina começou a se abrir lentamente. No horizonte surgiu uma cidade antiga. Silenciosa. Escura. Parada no tempo.",
+
+opcoes:[
+{txt:"Entrar em Hollow Creek",prox:5}
+]
+},
+
+{
+texto:"Uma placa enferrujada balançava com o vento:\n\n'BEM-VINDO A HOLLOW CREEK'\n\nLogo abaixo, alguém havia escrito com tinta vermelha:\n\n'VOCÊ NÃO VAI EMBORA.'",
+
+opcoes:[
+{txt:"Começar a investigação",prox:6}
+]
+},
+
+{
+texto:"Fim do Prólogo.\n\nA cidade observava cada movimento deles. E, em algum lugar da escuridão... alguma coisa já sabia seus nomes.",
+
+opcoes:[]
+}
+
+];
+
+let atual=0;
+
+const texto=document.getElementById("texto");
+
+const botoes=document.getElementById("botoes");
+
+function escrever(msg){
+
+texto.innerHTML="";
+
+let i=0;
+
+const timer=setInterval(()=>{
+
+texto.innerHTML+=msg.charAt(i);
+
+i++;
+
+if(i>=msg.length){
+
+clearInterval(timer);
+
+mostrarBotoes();
+
+}
+
+},30);
+
+}
+
+function mostrarBotoes(){
+
+botoes.innerHTML="";
+
+cenas[atual].opcoes.forEach(op=>{
+
+const b=document.createElement("button");
+
+b.innerText=op.txt;
+
+b.onclick=()=>{
+
+atual=op.prox;
+
+escrever(cenas[atual].texto);
+
+};
+
+botoes.appendChild(b);
+
+});
+
+}
+
+escrever(cenas[0].texto);
+
+</script>
+
+</body>
+</html>
