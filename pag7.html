@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Creek - A Morte de Lucas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Creepster&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #050505;
+            color: #d1d1d1;
+            font-family: 'Special Elite', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efeito de Vignette / Lanterna / Escuridão */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 20%, rgba(0, 0, 0, 0.95) 90%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Efeito de Linhas CRT/TV Antiga */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 11;
+            opacity: 0.6;
+        }
+
+        /* Moldura do Jogo */
+        .game-container {
+            width: 90%;
+            max-width: 800px;
+            min-height: 520px;
+            background-color: #0d0d0d;
+            border: 2px solid #330000;
+            box-shadow: 0 0 25px rgba(139, 0, 0, 0.2), inset 0 0 15px rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 5;
+            border-radius: 4px;
+        }
+
+        /* Efeito de Flicker (Piscar) */
+        .flicker {
+            animation: ambientFlicker 6s infinite alternate;
+        }
+
+        @keyframes ambientFlicker {
+            0%, 100% { opacity: 1; }
+            40% { opacity: 0.92; }
+            42% { opacity: 0.4; }
+            43% { opacity: 0.95; }
+            80% { opacity: 0.88; }
+            82% { opacity: 0.3; }
+            83% { opacity: 0.9; }
+        }
+
+        /* Cabeçalho do Cap. */
+        .header {
+            border-bottom: 1px solid #331111;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-family: 'Creepster', cursive;
+            font-size: 1.8rem;
+            color: #8b0000;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+        }
+
+        .location {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Caixa de Texto */
+        .story-box {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #cccccc;
+            min-height: 220px;
+            margin-bottom: 25px;
+        }
+
+        .story-box p {
+            margin-bottom: 12px;
+        }
+
+        .highlight {
+            color: #b30000;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(179, 0, 0, 0.4);
+        }
+
+        .quote {
+            color: #e6b800;
+            font-style: italic;
+            padding-left: 15px;
+            border-left: 2px solid #8b0000;
+            margin: 15px 0;
+        }
+
+        /* Opções de Escolha */
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-choice {
+            background-color: #141414;
+            color: #aaaaaa;
+            border: 1px solid #333333;
+            padding: 14px 18px;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-choice:hover:not(:disabled) {
+            background-color: #240505;
+            color: #ffffff;
+            border-color: #8b0000;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+            transform: translateX(4px);
+        }
+
+        .btn-choice:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Shake Effect para impacto */
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+                min-height: 90vh;
+            }
+            .story-box {
+                font-size: 1rem;
+            }
+            .title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+
+    <div class="game-container flicker" id="game-container">
+        <div class="header">
+            <span class="title">HOLLOW CREEK</span>
+            <span class="location" id="scene-location">Estrada // Interior do Veículo</span>
+        </div>
+
+        <div class="story-box" id="story-box">
+            <!-- O texto da história será renderizado via JS aqui -->
+        </div>
+
+        <div class="choices-container" id="choices-container">
+            <!-- Os botões de escolhas serão injetados dinamicamente -->
+        </div>
+    </div>
+
+    <script>
+        // Dados Narrativos das Cenas
+        const scenes = {
+            inicio: {
+                location: "Estrada // Dentro do Carro",
+                text: `Enquanto discutem o que fazer... Lucas inspira profundamente. Sorri.
+<br><br>
+Não era um sorriso humano. Era <span class='highlight'>vazio</span>. Sem emoção.
+<br><br>
+Então pronuncia suas últimas palavras:
+<div class='quote'>"— Ela encontrou vocês."</div>
+Seu peito para de se mover. O silêncio toma conta do carro. Nenhum deles consegue acreditar.
+<br><br>
+Mas Hollow Creek ainda não havia mostrado seu verdadeiro horror. Já amanheceu, e o grupo precisa decidir o destino do corpo.`,
+                choices: [
+                    { text: "A) Permanecer dentro do carro", nextScene: "carro" },
+                    { text: "B) Levar Lucas para a igreja", nextScene: "igreja" },
+                    { text: "C) Levar Lucas ao necrotério", nextScene: "necroterio" }
+                ]
+            },
+            carro: {
+                location: "Estrada // Dentro do Veículo Imobilizado",
+                text: `Vocês trancam as portas e decidem esperar. O vapor da respiração de vocês embaça os vidros congelados.
+<br><br>
+Durante a madrugada...
+<br><br>
+<span class='highlight'>Três batidas na lataria.</span>
+<br><br>
+Silêncio absoluto. A respiração do grupo trava.
+<br><br>
+Mais três batidas. Desta vez, no teto.
+<br><br>
+Algo lento, pesado e de passos arrastados caminha ao redor do veículo...`,
+                choices: [
+                    { text: "Recomeçar o pesadelo", nextScene: "inicio" }
+                ]
+            },
+            igreja: {
+                location: "Vila // A Igreja Abandonada",
+                text: `Vocês carregam o corpo gélido de Lucas até a antiga capela de pedra da cidade. O ar cheira a mofo e cera queimada.
+<br><br>
+O padre desapareceu décadas atrás em circunstâncias nunca explicadas.
+<br><br>
+Mesmo assim...
+<br><br>
+Flores totalmente frescas repousam diante do altar, soltando um perfume adocicado que mal consegue cobrir o cheiro de decomposição que começa a emanar de Lucas.`,
+                choices: [
+                    { text: "Recomeçar o pesadelo", nextScene: "inicio" }
+                ]
+            },
+            necroterio: {
+                location: "Centro // Necrotério Municipal",
+                text: `A porta dos fundos estava encostada. O cheiro de formol é sufocante. A luz do amanhecer mal atravessa a poeira das janelas.
+<br><br>
+Todos os armários de metal possuem nomes enferrujados gravados nas gavetas.
+<br><br>
+Exceto um.
+<br><br>
+O armário com a etiqueta de <span class='highlight'>Lucas</span> já estava totalmente aberto.
+<br><br>
+Como se alguém soubesse exatamente a hora em que ele chegaria.`,
+                choices: [
+                    { text: "Recomeçar o pesadelo", nextScene: "inicio" }
+                ]
+            }
+        };
+
+        let currentTypeTimeout = null;
+
+        // Função de Efeito Typewriter
+        function typeWriter(htmlText, elementId, speed = 20, callback = null) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = "";
+            
+            // Cria um elemento temporário para parsear as tags HTML com segurança
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlText;
+            
+            let charIndex = 0;
+            const fullContent = tempDiv.innerHTML;
+
+            function type() {
+                // Se encontrar uma tag HTML, insere o bloco completo sem quebrar a tag
+                if (fullContent[charIndex] === '<') {
+                    const closingIndex = fullContent.indexOf('>', charIndex);
+                    if (closingIndex !== -1) {
+                        charIndex = closingIndex + 1;
+                    }
+                } else {
+                    charIndex++;
+                }
+
+                container.innerHTML = fullContent.substring(0, charIndex);
+
+                if (charIndex < fullContent.length) {
+                    currentTypeTimeout = setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+
+            type();
+        }
+
+        // Função para Renderizar a Cena
+        function loadScene(sceneKey) {
+            const scene = scenes[sceneKey];
+            if (!scene) return;
+
+            // Limpa timeouts anteriores se o jogador clicar rápido
+            if (currentTypeTimeout) clearTimeout(currentTypeTimeout);
+
+            // Efeito de impacto/tremer na caixa
+            const gameContainer = document.getElementById('game-container');
+            gameContainer.classList.remove('shake');
+            void gameContainer.offsetWidth; // Trigger reflow
+            gameContainer.classList.add('shake');
+
+            // Atualiza Localização
+            document.getElementById('scene-location').textContent = scene.location;
+
+            // Desabilita botões temporariamente durante a digitação
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+
+            // Efeito Typewriter e injeção das escolhas ao terminar
+            typeWriter(scene.text, 'story-box', 15, () => {
+                renderChoices(scene.choices);
+            });
+        }
+
+        // Renderiza as Escolhas
+        function renderChoices(choices) {
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-choice';
+                btn.innerHTML = choice.text;
+                btn.onclick = () => loadScene(choice.nextScene);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        // Inicia o Jogo
+        window.onload = () => {
+            loadScene('inicio');
+        };
+    </script>
+</body>
+</html>
