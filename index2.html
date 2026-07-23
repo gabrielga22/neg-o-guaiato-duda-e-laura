@@ -1,11 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolha seu Personagem</title>
+ 
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Georgia, serif;
+}
+ 
+body{
+    background:#050505;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background-image:radial-gradient(circle,#2b0000,#050505 70%);
+}
+ 
+.container{
+    width:95%;
+    max-width:1400px;
+    text-align:center;
+}
+ 
+h1{
+    color:#b30000;
+    font-size:45px;
+    margin-bottom:30px;
+    letter-spacing:3px;
+    text-shadow:0 0 15px red;
+}
+ 
+.personagens{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+ 
+.card{
+    width:280px;
+    background:#111;
+    border:2px solid #550000;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.3s;
+    box-shadow:0 0 15px rgba(255,0,0,.25);
+}
+ 
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 25px red;
+}
+ 
+.card img{
+    width:100%;
+    height:520px;
+    object-fit:cover;
+}
+ 
+.card h2{
+    color:#d40000;
+    margin:15px 0;
+}
+ 
+.card p{
+    padding:0 15px;
+    color:#ddd;
+    line-height:24px;
+    min-height:140px;
+}
+ 
+button{
+    width:90%;
+    margin:20px;
+    padding:14px;
+    font-size:18px;
+    background:#7a0000;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.3s;
+}
+ 
+button:hover{
+    background:#c40000;
+    box-shadow:0 0 20px red;
+}
+</style>
 </head>
+ 
 <body>
-    
+ 
+<div class="container">
+ 
+<h1>ESCOLHA SEU PERSONAGEM</h1>
+ 
+<div class="personagens">
+ 
+<div class="card">
+<img src="personagens.jpg" alt="Arthur">
+<h2>Arthur "Art" Hale</h2>
+<p>
+Líder do grupo.<br>
+Ex-policial.<br>
+Frio, racional e armado.<br>
+Atormentado pela morte da esposa.
+</p>
+ 
+<button onclick="escolher('Arthur Hale')">
+Escolher
+</button>
+ 
+</div>
+ 
+<div class="card">
+<img src="personagens.jpg" alt="Evelyn">
+<h2>Evelyn Carter</h2>
+<p>
+Especialista em ocultismo.<br>
+Muito inteligente.<br>
+Obcecada pelo sobrenatural.<br>
+Acredita que tudo segue regras.
+</p>
+ 
+<button onclick="escolher('Evelyn Carter')">
+Escolher
+</button>
+ 
+</div>
+ 
+<div class="card">
+<img src="personagens.jpg" alt="Noah">
+<h2>Noah Briggs</h2>
+<p>
+Mecânico e caçador.<br>
+Brutal e supersticioso.<br>
+Impulsivo.<br>
+Sempre leva a arma certa.
+</p>
+ 
+<button onclick="escolher('Noah Briggs')">
+Escolher
+</button>
+ 
+</div>
+ 
+<div class="card">
+<img src="personagens.jpg" alt="Lucas">
+<h2>Lucas Reed</h2>
+<p>
+O mais novo.<br>
+Filma as investigações.<br>
+Curioso.<br>
+Ainda acredita em salvar pessoas.
+</p>
+ 
+<button onclick="escolher('Lucas Reed')">
+Escolher
+</button>
+ 
+</div>
+ 
+</div>
+ 
+</div>
+ 
+<script>
+ 
+function escolher(personagem){
+ 
+localStorage.setItem("personagem", personagem);
+ 
+// Próxima página do jogo
+window.location.href="jogo.html";
+ 
+}
+ 
+</script>
+ 
 </body>
 </html>
