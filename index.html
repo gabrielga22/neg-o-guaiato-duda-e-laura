@@ -3,25 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <title>The Price of Knowledge</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100%;
+    height:100vh;
+    font-family:Georgia, serif;
+
+    /* Imagem de fundo */
+    background-image:url("Imagem gerada_ Rua desolada e sombria à noite.png");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+.overlay{
+    width:100%;
+    height:100vh;
+
+    background:rgba(0,0,0,0.65);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+
+    color:white;
+}
+
+h1{
+    font-size:70px;
+    color:#b10000;
+    text-shadow:0 0 20px #ff0000;
+    margin-bottom:20px;
+}
+
+p{
+    font-size:24px;
+    max-width:700px;
+    margin-bottom:40px;
+    line-height:1.6;
+}
+
+button{
+    padding:15px 50px;
+    font-size:22px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    background:#8b0000;
+    color:white;
+    transition:.3s;
+}
+
+button:hover{
+    background:#5a0000;
+    transform:scale(1.05);
+}
+</style>
+
 </head>
- 
+
 <body>
- 
+
 <div class="overlay">
- 
-<h1>HOLLOW CREEK</h1>
- 
+
+<h1>The Price of Knowledge</h1>
+
 <p>
-"Toda estrada leva para algum lugar.
+"Toda estrada leva para algum lugar.<br>
 Algumas só não deixam você voltar."
 </p>
- 
+
 <a href="intro.html">
-<button>INICIAR</button>
+    <button>INICIAR</button>
 </a>
- 
+
 </div>
- 
+
 </body>
 </html>
