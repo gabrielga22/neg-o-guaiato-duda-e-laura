@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Creek: O Loop</title>
+    <style>
+        /* -----------------------------------------------------------
+           1. Estética e Tema (CSS)
+           ----------------------------------------------------------- */
+        
+        /* Importando fonte estilo máquina de escrever retro/assustadora */
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+        :root {
+            --bg-color: #050505; /* Preto quase absoluto */
+            --text-color: #b0b0b0; /* Cinza claro para não cansar, mas manter o clima */
+            --accent-red: #800000; /* Vermelho sangue escuro para destaques */
+            --bright-red: #ff3333; /* Vermelho vivo para sustos e escolhas */
+            --font-family: 'Special Elite', monospace;
+            --shadow-fx: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            overflow: hidden; /* Impede scroll da página, o texto rola dentro da caixa */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Efeito visual de Vinheta gótica (bordas escuras) e Chuva estática */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%),
+                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36z8gAFWNoYGAEC8IE4UIwQZgAVQEAV5QOEnX6D4gAAAAASUVORK5CYII='); /* Ruído micro para textura */
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Efeito sutil de lanterna seguindo o mouse (ativado por JS) */
+        #flashlight-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,230,0.05) 0%, rgba(0,0,0,0) 30%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Container Principal do Jogo */
+        #game-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        /* Título do Jogo */
+        header h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #404040;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        /* -----------------------------------------------------------
+           3. Caixa de Diálogo e Botões
+           ----------------------------------------------------------- */
+        
+        #dialogue-box {
+            background-color: rgba(10, 10, 10, 0.9);
+            border: 2px solid #1a1a1a;
+            /* Borda desgastada gótica sutil */
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><path d="M0 0h50v2H0zM0 48h50v2H0zM0 0h2v50H0zM48 0h2v50h-2z" fill="%23303030"/></svg>') 10 stretch;
+            
+            padding: 30px;
+            height: 60%;
+            overflow-y: auto; /* Scroll se o texto for muito grande */
+            box-shadow: inset 0 0 20px rgba(0,0,0,1), var(--shadow-fx);
+            position: relative;
+        }
+
+        /* Scrollbar estilizada (suja) */
+        #dialogue-box::-webkit-scrollbar { width: 6px; }
+        #dialogue-box::-webkit-scrollbar-track { background: #0a0a0a; }
+        #dialogue-box::-webkit-scrollbar-thumb { background: #303030; }
+
+        #text-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Destaque para certas palavras */
+        .highlight {
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+        
+        .static-voice {
+            color: #808080;
+            font-style: italic;
+            animation: textFlicker 0.1s infinite;
+        }
+
+        @keyframes textFlicker {
+            0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; }
+        }
+
+        /* Container de Botões de Escolha */
+        #choices-container {
+            height: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 10px;
+        }
+
+        /* Estilo dos Botões de Escolha */
+        .choice-btn {
+            background: none;
+            border: 1px solid #303030;
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            padding: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            opacity: 0; /* Começa invisível para animação de fade-in */
+            animation: fadeIn 0.5s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-btn:hover {
+            background-color: rgba(128, 0, 0, 0.1);
+            border-color: var(--accent-red);
+            color: var(--bright-red);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        .choice-btn::before {
+            content: "> ";
+            color: var(--accent-red);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .choice-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* Animação simples de fade in */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Efeito de lanterna seguindo o mouse -->
+    <div id="flashlight-overlay"></div>
+
+    <div id="game-container">
+        <header>
+            <h1>Hollow Creek</h1>
+        </header>
+
+        <!-- Caixa de Diálogo -->
+        <div id="dialogue-box">
+            <div id="text-content">
+                <!-- O texto será inserido aqui pelo JavaScript -->
+            </div>
+        </div>
+
+        <!-- Área de Escolhas/Avanço -->
+        <div id="choices-container">
+            <!-- Botões serão inseridos aqui pelo JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        /* -----------------------------------------------------------
+           3. Mecânicas Interativas e Narrativa (JS)
+           ----------------------------------------------------------- */
+
+        // Dados da História divididos em "cenas"
+        const storyData = {
+            start: {
+                text: "O LOOP<br><br>Com o passar dos dias, o grupo descobre que <span class='highlight'>Hollow Creek</span> é um lugar vivo.",
+                choices: [
+                    { text: "Observar a rotina da cidade...", target: "daytime" }
+                ]
+            },
+            daytime: {
+                text: "Durante o dia, seus moradores caminham normalmente. No entanto, eles evitam contato visual e encerram qualquer conversa abruptamente quando Arthur, Noah ou Evelyn fazem perguntas sobre a cidade.",
+                choices: [
+                    { text: "Esperar o cair da noite.", target: "nightfall" }
+                ]
+            },
+            nightfall: {
+                text: "À noite, tudo muda.<br>A neblina cobre as ruas como um lençol mortuário.<br>Os relógios param invariavelmente às <span class='highlight'>02:17</span>.<br>O vento desaparece. Os animais somem.",
+                choices: [
+                    { text: "O que surge na escuridão?", target: "watchers" }
+                ]
+            },
+            watchers: {
+                text: "Então surgem <span class='highlight'>Os Observadores</span>.<br>Criaturas humanoides de pele acinzentada e corpos anormalmente magros. Eles nunca correm. Nunca piscam.<br><br><span class='highlight'>Nunca deixam de sorrir.</span><br><br>Apenas caminham lentamente. Porque sabem que ninguém consegue escapar.",
+                choices: [
+                    { text: "Ouvir as vozes...", target: "voices" }
+                ]
+            },
+            voices: {
+                text: "Enquanto perseguem suas vítimas, eles usam exatamente a voz das pessoas que elas mais amavam.<br><br>Arthur escuta sua esposa falecida.<br>Noah ouve seu pai.<br>Evelyn escuta seu antigo professor.",
+                choices: [
+                    { text: "E quanto a Lucas?", target: "lucas" }
+                ]
+            },
+            lucas: {
+                text: "E, mesmo morto, Lucas continua tentando falar com os amigos por meio de rádios estragados, televisões desligadas e espelhos.<br><br>Sempre repetindo a mesma frase com uma voz cheia de estática:",
+                choices: [
+                    { text: "Ouvir o aviso final.", target: "final_warning" }
+                ]
+            },
+            final_warning: {
+                text: "<span class='static-voice'>\"Não procurem a Porta Vermelha... Ela procura vocês.\"</span>",
+                choices: [
+                    { text: "O Loop recomeça.", target: "start" } // Mecânica de Loop
+                ]
+            }
+        };
+
+        // Configurações do efeito Typewriter
+        const typeSpeed = 30; // Velocidade em milissegundos por caractere
+        let isTyping = false;
+        let typingTimeout;
+
+        // Elementos HTML
+        const textContentEl = document.getElementById('text-content');
+        const choicesContainerEl = document.getElementById('choices-container');
+        const dialogueBoxEl = document.getElementById('dialogue-box');
+
+        // Função para revelar o texto aos poucos (Typewriter)
+        function typeWriter(htmlText, callback) {
+            isTyping = true;
+            textContentEl.innerHTML = ""; // Limpa o texto anterior
+            choicesContainerEl.innerHTML = ""; // Esconde escolhas enquanto digita
+
+            let charIndex = 0;
+            let currentDisplay = "";
+            
+            // Função interna para processar tags HTML e caracteres
+            function type() {
+                // Se chegarmos ao fim do texto
+                if (charIndex >= htmlText.length) {
+                    isTyping = false;
+                    dialogueBoxEl.scrollTop = dialogueBoxEl.scrollHeight; // Auto-scroll para o final
+                    if (callback) callback();
+                    return;
+                }
+
+                let char = htmlText[charIndex];
+
+                // Lógica para pular tags HTML (não digitar <span class...>)
+                if (char === '<') {
+                    let tagEnd = htmlText.indexOf('>', charIndex);
+                    if (tagEnd !== -1) {
+                        currentDisplay += htmlText.substring(charIndex, tagEnd + 1);
+                        charIndex = tagEnd + 1;
+                        type(); // Chama recursivamente sem delay para colar a tag
+                        return;
+                    }
+                } else {
+                    currentDisplay += char;
+                    charIndex++;
+                }
+
+                textContentEl.innerHTML = currentDisplay;
+                
+                // Auto-scroll enquanto digita
+                dialogueBoxEl.scrollTop = dialogueBoxEl.scrollHeight;
+
+                typingTimeout = setTimeout(type, typeSpeed);
+            }
+
+            type(); // Inicia o processo
+        }
+
+        // Função para mostrar os botões de escolha
+        function showChoices(choices) {
+            choicesContainerEl.innerHTML = ""; // Limpa container
+
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.classList.add('choice-btn');
+                button.innerHTML = choice.text;
+                
+                // Define o atraso da animação de fade-in para cada botão
+                button.style.animationDelay = `${index * 0.2}s`;
+
+                button.addEventListener('click', () => {
+                    if (!isTyping) {
+                        loadScene(choice.target);
+                    }
+                });
+                choicesContainerEl.appendChild(button);
+            });
+        }
+
+        // Função principal para carregar uma cena
+        function loadScene(sceneId) {
+            const scene = storyData[sceneId];
+            if (!scene) {
+                console.error("Cena não encontrada:", sceneId);
+                return;
+            }
+
+            // Toca efeito typewriter e depois mostra escolhas
+            typeWriter(scene.text, () => {
+                showChoices(scene.choices);
+            });
+        }
+
+        // -----------------------------------------------------------
+        // Detalhes Visuais: Lanterna seguindo o mouse
+        // -----------------------------------------------------------
+        const flashlightEl = document.getElementById('flashlight-overlay');
+        window.addEventListener('mousemove', e => {
+            // Atualiza as variáveis CSS com a posição do mouse
+            flashlightEl.style.setProperty('--mouse-x', e.clientX + 'px');
+            flashlightEl.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        // -----------------------------------------------------------
+        // Inicialização
+        // -----------------------------------------------------------
+        // Começa o jogo na cena 'start'
+        window.onload = () => {
+            loadScene('start');
+        };
+
+    </script>
+</body>
+</html>
