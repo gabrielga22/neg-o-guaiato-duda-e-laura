@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hollow Creek: O Primeiro Loop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #050505;
+      color: #bfbfbf;
+      font-family: 'Special Elite', 'Courier Prime', monospace;
+      overflow: hidden;
+    }
+
+    /* Canvas de Chuva no Fundo */
+    #rain-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* Efeito de Lanterna Sutil seguindo o Mouse */
+    .flashlight-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(
+        circle 320px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0,0,0,0) 0%,
+        rgba(5,5,5,0.75) 60%,
+        rgba(2,2,2,0.98) 100%
+      );
+    }
+
+    /* Vinheta de Sangue / Borda Desgastada */
+    .vignette {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+      box-shadow: inset 0 0 100px rgba(80, 0, 0, 0.4), inset 0 0 180px rgba(0, 0, 0, 0.9);
+      border: 2px solid rgba(100, 0, 0, 0.2);
+    }
+
+    /* Layout Principal do Jogo */
+    #game-container {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+    }
+
+    /* Moldura Principal de Texto / Cena */
+    .story-frame {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(12, 10, 10, 0.85);
+      border: 1px solid rgba(139, 0, 0, 0.3);
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.95), 0 0 15px rgba(100, 0, 0, 0.2);
+      padding: 30px 35px;
+      border-radius: 4px;
+      backdrop-filter: blur(3px);
+      position: relative;
+    }
+
+    .story-header {
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      color: #8b0000;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Caixa de Diálogo Principal */
+    .dialogue-box {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      min-height: 180px;
+      color: #d4d4d4;
+      text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+      white-space: pre-line;
+      margin-bottom: 25px;
+    }
+
+    /* Estilo para Sussurros / Destaques em Vermelho */
+    .whisper {
+      color: #a82424;
+      font-weight: bold;
+      text-shadow: 0 0 6px rgba(168, 36, 36, 0.4);
+    }
+
+    /* Painel de Escolhas */
+    .choices-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .choice-btn {
+      background: rgba(20, 15, 15, 0.8);
+      color: #aaa;
+      border: 1px solid #332222;
+      padding: 14px 20px;
+      font-family: 'Special Elite', monospace;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .choice-btn:hover {
+      background: rgba(45, 10, 10, 0.9);
+      color: #f0f0f0;
+      border-color: #8b0000;
+      box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+      transform: translateX(4px);
+    }
+
+    .choice-btn:active {
+      transform: translateX(2px);
+    }
+
+    /* Efeito de glitch piscante no título */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+      52% { opacity: 0.9; }
+      54% { opacity: 0.2; }
+      80% { opacity: 0.8; }
+    }
+
+    .flicker {
+      animation: flicker 4s infinite;
+    }
+
+    /* Dica sutil no rodapé */
+    .footer-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 20px;
+      font-size: 0.75rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="rain-canvas"></canvas>
+  <div class="flashlight-overlay"></div>
+  <div class="vignette"></div>
+
+  <div id="game-container">
+    <div class="story-frame">
+      <div class="story-header">
+        <span class="flicker">Hollow Creek — Capítulo I</span>
+        <span id="scene-tag">O Loop</span>
+      </div>
+
+      <div class="dialogue-box" id="text-target"></div>
+
+      <div class="choices-container" id="choices-target"></div>
+      <div class="footer-hint">Clique para pular a digitação</div>
+    </div>
+  </div>
+
+  <script>
+    // --- ILUMINAÇÃO DE LANTERNA (SEGUE O CURSOR) ---
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--mouse-x', ${e.clientX}px);
+      document.documentElement.style.setProperty('--mouse-y', ${e.clientY}px);
+    });
+
+    // --- EFEITO VISUAL DE CHUVA ---
+    const canvas = document.getElementById('rain-canvas');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drops = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        length: Math.random() * 20 + 10,
+        speed: Math.random() * 10 + 12
+      }));
+    }
+
+    function drawRain() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#6a7885';
+      ctx.lineWidth = 1;
+      
+      drops.forEach(drop => {
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x - 2, drop.y + drop.length);
+        ctx.stroke();
+
+        drop.y += drop.speed;
+        drop.x -= 0.5;
+
+        if (drop.y > canvas.height) {
+          drop.y = -20;
+          drop.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawRain);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawRain();
+
+    // --- ESTRUTURA DA NARRATIVA DA VISUAL NOVEL ---
+    const storyData = {
+      start: {
+        tag: "O PRIMEIRO LOOP",
+        text: `Independentemente da escolha, todos percebem que Hollow Creek não funciona como uma cidade comum.
+
+Arthur tenta sair.
+Dirige durante quase vinte minutos.
+Vira à esquerda. Depois à direita. Segue em frente. Retorna pela avenida principal.
+
+Então...
+O mesmo posto. A mesma igreja. O mesmo motel.
+Tudo exatamente no mesmo lugar. Ates as gotas de chuva pareciam cair da mesma maneira.`,
+        choices: [
+          { text: "[Avançar] Observar a reação dos passageiros", target: "loop_reaction" }
+        ]
+      },
+      loop_reaction: {
+        tag: "SEM SAÍDA",
+        text: `Noah soca o painel com força, quebrando o silêncio tenso.
+— Isso é impossível!
+
+Arthur acelera novamente. O motor ronca, o carro percorre quilômetros sob o temporal.
+Mas o resultado é implacável: eles sempre retornam ao mesmo ponto inicial.
+
+Foi então que Evelyn compreendeu.
+— Não estamos presos em uma cidade...
+Ela respirou fundo, a voz tremendo de pavor:
+— Estamos presos dentro dela.`,
+        choices: [
+          { text: "[Avançar] Estacionar o carro", target: "second_choice" }
+        ]
+      },
+      second_choice: {
+        tag: "SEGUNDA ESCOLHA",
+        text: `Arthur estaciona o carro no acostamento úmido.
+Lucas continua no banco de trás, respirando com extrema dificuldade. O silêncio sufocante domina o interior do veículo.
+
+O que Arthur deve fazer agora?`,
+        choices: [
+          { text: "A) Continuar dirigindo (Acreditar que há uma saída)", target: "choice_a" },
+          { text: "B) Conversar com um morador que se aproxima", target: "choice_b" },
+          { text: "C) Examinar o estado de Lucas", target: "choice_c" }
+        ]
+      },
+      choice_a: {
+        tag: "A ESTRADA SEM FIM",
+        text: `Arthur engata a marcha e pisa fundo no acelerador. Talvez exista uma saída escondida nas sombras da próxima curva.
+
+Consequências:
+Arthur sente o peso esmagador do desespero e perde parte da esperança.
+Ele nota algo aterrorizante no painel: o ponteiro de combustível simplesmente não diminui, não importa o quanto rode.
+
+O grupo percebe a terrível verdade... Hollow Creek altera o próprio espaço ao redor deles.`,
+        choices: [
+          { text: "Retornar ao acostamento e tentar outra abordagem", target: "second_choice" }
+        ]
+      },
+      choice_b: {
+        tag: "O VELHO DA ESTRADA",
+        text: `Um velho surge da escuridão, caminhando lentamente em direção ao carro sob a chuva copiosa.
+
+Ele para junto à janela de Arthur. Sem sequer perguntar quem são ou pedir explicações, ele apenas sussurra com uma voz rouca e cava:
+
+"A cidade sempre devolve quem tenta fugir."
+
+Mais tarde, esse homem poderá se tornar um importante aliado... ou um inimigo mortal.`,
+        choices: [
+          { text: "Retornar ao grupo dentro do carro", target: "second_choice" }
+        ]
+      },
+      choice_c: {
+        tag: "O AVISO DE LUCAS",
+        text: `Arthur se vira para o banco traseiro para examinar o companheiro.
+
+Lucas abre lentamente os olhos, opacos e desprovidos de brilho. Ele olha diretamente nos olhos de Arthur.
+
+Sem mover um único músculo da cabeça, ele sussurra em um tom arrepiante:
+<span class="whisper">"Não deixem eles sorrirem..."</span>
+
+Logo em seguida, os olhos de Lucas se reviram e sua pressão cai drasticamente!`,
+        choices: [
+          { text: "Tentar reanimar Lucas (Voltar ao painel)", target: "second_choice" }
+        ]
+      }
+    };
+
+    // --- EFEITO TYPEWRITER E GERENCIAMENTO DE ESTADO ---
+    let currentSceneKey = "start";
+    let isTyping = false;
+    let typeTimeout = null;
+    let fullTextToType = "";
+
+    const textTarget = document.getElementById("text-target");
+    const choicesTarget = document.getElementById("choices-target");
+    const sceneTag = document.getElementById("scene-tag");
+
+    function renderScene(sceneKey) {
+      currentSceneKey = sceneKey;
+      const scene = storyData[sceneKey];
+      
+      sceneTag.textContent = scene.tag;
+      choicesTarget.innerHTML = "";
+      textTarget.innerHTML = "";
+      fullTextToType = scene.text;
+
+      let charIndex = 0;
+      isTyping = true;
+
+      // Efeito de digitação caractere por caractere
+      function typeChar() {
+        if (charIndex < fullTextToType.length) {
+          // Trata HTML embutido (como a tag <span> do sussurro)
+          if (fullTextToType[charIndex] === '<') {
+            const closingTagIndex = fullTextToType.indexOf('>', charIndex);
+            if (closingTagIndex !== -1) {
+              textTarget.innerHTML += fullTextToType.substring(charIndex, closingTagIndex + 1);
+              charIndex = closingTagIndex + 1;
+            }
+          } else {
+            textTarget.innerHTML += fullTextToType[charIndex];
+            charIndex++;
+          }
+          typeTimeout = setTimeout(typeChar, 25);
+        } else {
+          isTyping = false;
+          showChoices(scene.choices);
+        }
+      }
+
+      typeChar();
+    }
+
+    // Pular animação ao clicar na tela se estiver digitando
+    document.querySelector('.story-frame').addEventListener('click', (e) => {
+      // Ignora cliques nos botões para evitar duplo acionamento
+      if (e.target.tagName === 'BUTTON') return;
+
+      if (isTyping) {
+        clearTimeout(typeTimeout);
+        textTarget.innerHTML = fullTextToType;
+        isTyping = false;
+        showChoices(storyData[currentSceneKey].choices);
+      }
+    });
+
+    // Exibir Botões de Escolha
+    function showChoices(choices) {
+      choicesTarget.innerHTML = "";
+      choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
+        btn.innerHTML = choice.text;
+        btn.onclick = () => renderScene(choice.target);
+        choicesTarget.appendChild(btn);
+      });
+    }
+
+    // Inicializa o Jogo
+    renderScene("start");
+  </script>
+</body>
+</html>

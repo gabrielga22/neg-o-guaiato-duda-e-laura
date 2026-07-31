@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O LOOP - Hollow Creek</title>
+    <style>
+        /* Importação de fontes macabras/retrô */
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=VT323&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #030303;
+            color: #d1d1d1;
+            font-family: 'Special Elite', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efeito de iluminação por lanterna e vinheta */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.85) 70%, rgba(0, 0, 0, 0.98) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Linhas de escaneamento CRT (Visual retrô) */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.6;
+        }
+
+        /* Névoa em movimento */
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100vh;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(20,20,20,0.15)" filter="blur(20px)"/></svg>') repeat-x;
+            background-size: 50% 100%;
+            animation: moveFog 60s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        @keyframes moveFog {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Relógio congelado */
+        .clock-display {
+            position: fixed;
+            top: 20px;
+            right: 25px;
+            font-family: 'VT323', monospace;
+            font-size: 2.2rem;
+            color: #8a1212;
+            text-shadow: 0 0 8px rgba(138, 18, 18, 0.8);
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        /* Conteiner Principal da Visual Novel */
+        .game-container {
+            width: 90%;
+            max-width: 750px;
+            background: rgba(12, 10, 10, 0.92);
+            border: 2px solid #2a2222;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(138, 18, 18, 0.15);
+            position: relative;
+            z-index: 5;
+            backdrop-filter: blur(3px);
+        }
+
+        /* Cabeçalho da Cena */
+        .scene-header {
+            font-size: 0.9rem;
+            color: #665d5d;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #221a1a;
+            padding-bottom: 8px;
+        }
+
+        /* Caixa do Texto */
+        .story-box {
+            min-height: 180px;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #e0d8d8;
+            margin-bottom: 25px;
+            white-space: pre-line;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Destaques temáticos no texto */
+        .red-text {
+            color: #b31b1b;
+            text-shadow: 0 0 5px rgba(179, 27, 27, 0.6);
+            font-weight: bold;
+        }
+
+        .whisper-text {
+            color: #8e8282;
+            font-style: italic;
+        }
+
+        /* Container de Opções */
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Botões de Escolha */
+        .btn-choice {
+            background: rgba(20, 15, 15, 0.8);
+            color: #aaaaaa;
+            border: 1px solid #3d2b2b;
+            padding: 14px 20px;
+            font-family: 'Special Elite', monospace;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .btn-choice:hover {
+            background: rgba(45, 12, 12, 0.8);
+            color: #ffffff;
+            border-color: #8a1212;
+            box-shadow: 0 0 10px rgba(138, 18, 18, 0.4);
+            transform: translateX(4px);
+        }
+
+        .btn-choice:active {
+            transform: translateX(2px);
+        }
+
+        /* Efeito de tremor leve na tela */
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+                width: 95%;
+            }
+            .story-box {
+                font-size: 1rem;
+            }
+            .clock-display {
+                font-size: 1.8rem;
+                top: 10px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="fog"></div>
+
+    <div class="clock-display" id="clock">02:17</div>
+
+    <div class="game-container" id="container">
+        <div class="scene-header" id="scene-header">Hollow Creek - Capítulo I</div>
+        <div class="story-box" id="story-text"></div>
+        <div class="choices-container" id="choices"></div>
+    </div>
+
+    <script>
+        // Estrutura das cenas do jogo baseada na história "O LOOP"
+        const storyData = {
+            1: {
+                header: "Hollow Creek — A Cidade Viva",
+                text: "Com o passar dos dias, você e seu grupo descobrem algo perturbador: Hollow Creek não é apenas um lugar esquecido no mapa.\n\nHollow Creek é um lugar vivo.\n\nDurante o dia, os moradores caminham pelas ruas de paralelepípedos. Parecem pessoas normais, mas evitam qualquer contato visual. Sempre que alguém do grupo tenta fazer perguntas sobre a cidade, eles simplesmente encerram a conversa e se afastam em silêncio.",
+                choices: [
+                    { text: "Observar a rotina da cidade até o pôr do sol.", nextScene: 2 },
+                    { text: "Tentar pressionar um morador local por respostas.", nextScene: 2 }
+                ]
+            },
+            2: {
+                header: "Transição — O Anunciar da Noite",
+                text: "A noite cai de forma súbita, engolindo a pouca luz do sol.\n\nTudo muda instantaneamente:\n• A neblina densa cobre cada centímetro das ruas.\n• Os relógios nas torres e nos pulsos param exatamente às 02:17.\n• O vento desaparece por completo.\n• Até o som dos insetos e animais simplesmente some.\n\nUm silêncio absoluto e sufocante toma conta de Hollow Creek.",
+                choices: [
+                    { text: "Procurar abrigo com Arthur, Noah e Evelyn.", nextScene: 3 }
+                ]
+            },
+            3: {
+                header: "A Aparição — Os Observadores",
+                text: "Do meio da neblina cinzenta, silhuetas começam a emergir.\n\nSurgem <span class='red-text'>Os Observadores</span>.\n\nCriaturas humanoides de pele acinzentada e corpos anormalmente magros. Eles nunca correm. Nunca piscam. <span class='red-text'>Nunca deixam de sorrir.</span>\n\nApenas caminham lentamente na direção do grupo. Eles não têm pressa... porque sabem que ninguém consegue escapar daqui.",
+                choices: [
+                    { text: "Recuar para dentro de uma casa abandonada.", nextScene: 4 },
+                    { text: "Tentar manter o grupo unido na rua deserta.", nextScene: 4 }
+                ]
+            },
+            4: {
+                header: "A Armadilha — Vozes do Passado",
+                text: "Enquanto as criaturas se aproximam em seu ritmo calmo, um som corta a neblina. Eles começam a falar...\n\nUsando exatamente a voz das pessoas que vocês mais amavam:\n\n— Arthur congela ao ouvir a voz de sua <span class='whisper-text'>falecida esposa</span> chamando por seu nome.\n— Noah dá um passo em falso ao escutar a voz de seu <span class='whisper-text'>pai</span>.\n— Evelyn segura o grito ao ouvir o tom inconfundível de seu <span class='whisper-text'>antigo professor</span>.",
+                choices: [
+                    { text: "Gritar para que todos cubram os ouvidos e ignorem as vozes!", nextScene: 5 }
+                ]
+            },
+            5: {
+                header: "O Sinal — A Mensagem do Morto",
+                text: "De repente, estática ecoa ao redor.\n\nMesmo morto, Lucas continua tentando falar com o grupo. A transmissão surge através dos chiados de rádios velhos, chiados em televisões desligadas nas janelas e reflexos distorcidos nos espelhos da rua.\n\nA voz de Lucas repete sem parar a mesma frase:\n\n<span class='red-text'>\"Não procurem a Porta Vermelha... Ela procura vocês.\"</span>",
+                choices: [
+                    { text: "Tentar fugir da neblina e encontrar uma saída.", nextScene: 6 },
+                    { text: "Procurar desesperadamente pela Porta Vermelha.", nextScene: 6 }
+                ]
+            },
+            6: {
+                header: "O Loop Sem Fim",
+                text: "Vocês correm pela neblina até os pulmões queimarem. As vozes continuam ecoando. Os sorrisos cinzentos e estáticos continuam se aproximando lentamente no escuro.\n\nSubitamente, a névoa se dissipa. A luz do sol atinge seus olhos.\n\nOs relógios voltam a funcionar. Os moradores caminham pelas ruas de novo, evitando o seu olhar.\n\nVocês estão de volta ao começo. O ciclo recomeçou.",
+                choices: [
+                    { text: "Reiniciar o Loop (Jogar Novamente)", nextScene: 1 }
+                ]
+            }
+        };
+
+        let currentScene = 1;
+        let isTyping = false;
+        let typewriterTimeout;
+
+        const storyTextElement = document.getElementById('story-text');
+        const choicesElement = document.getElementById('choices');
+        const sceneHeaderElement = document.getElementById('scene-header');
+        const gameContainer = document.getElementById('container');
+
+        // Efeito de digitação (Typewriter) com suporte a tags HTML simples
+        function typeWriterHTML(htmlText, element, speed = 20) {
+            isTyping = true;
+            element.innerHTML = "";
+            
+            let i = 0;
+            let currentHTML = "";
+
+            function type() {
+                if (i < htmlText.length) {
+                    // Se encontrar uma tag HTML, insere ela por inteiro de uma vez
+                    if (htmlText[i] === '<') {
+                        let tag = '';
+                        while (htmlText[i] !== '>' && i < htmlText.length) {
+                            tag += htmlText[i];
+                            i++;
+                        }
+                        tag += '>';
+                        i++;
+                        currentHTML += tag;
+                    } else {
+                        currentHTML += htmlText[i];
+                        i++;
+                    }
+                    
+                    element.innerHTML = currentHTML;
+                    typewriterTimeout = setTimeout(type, speed);
+                } else {
+                    isTyping = false;
+                    renderChoices();
+                }
+            }
+            type();
+        }
+
+        // Renderiza a cena atual
+        function renderScene(sceneIndex) {
+            clearTimeout(typewriterTimeout);
+            currentScene = sceneIndex;
+            const scene = storyData[sceneIndex];
+
+            // Trepidação leve ao mudar de cena para dar sensação de tensão
+            gameContainer.classList.remove('shake');
+            void gameContainer.offsetWidth; // Força reflow
+            gameContainer.classList.add('shake');
+
+            sceneHeaderElement.textContent = scene.header;
+            choicesElement.innerHTML = ""; // Limpa escolhas antigas enquanto digita
+
+            typeWriterHTML(scene.text, storyTextElement, 22);
+        }
+
+        // Exibe as opções de botões após a conclusão do texto
+        function renderChoices() {
+            const scene = storyData[currentScene];
+            choicesElement.innerHTML = "";
+
+            scene.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'btn-choice';
+                button.innerHTML = choice.text;
+                button.onclick = () => {
+                    if (!isTyping) {
+                        renderScene(choice.nextScene);
+                    }
+                };
+                choicesElement.appendChild(button);
+            });
+        }
+
+        // Se o jogador clicar no texto durante a digitação, exibe o texto completo imediatamente
+        storyTextElement.addEventListener('click', () => {
+            if (isTyping) {
+                clearTimeout(typewriterTimeout);
+                storyTextElement.innerHTML = storyData[currentScene].text;
+                isTyping = false;
+                renderChoices();
+            }
+        });
+
+        // Inicia o jogo na primeira cena
+        window.onload = () => {
+            renderScene(1);
+        };
+    </script>
+</body>
+</html>

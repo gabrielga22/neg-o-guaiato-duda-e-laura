@@ -1,11 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hollow Creek: O Loop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+ 
+    body {
+      background-color: #030304;
+      color: #c8c3c3;
+      font-family: 'Special Elite', monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+ 
+    /* Linhas de escaneamento CRT retro */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 100;
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+ 
+    /* Vinheta e neblina de escuridão profunda nas bordas */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(20, 15, 15, 0.1) 0%, rgba(5, 5, 8, 0.85) 65%, rgba(0, 0, 0, 0.98) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+ 
+    /* Container Principal */
+    .game-container {
+      width: 92%;
+      max-width: 820px;
+      background: #09080a;
+      border: 2px solid #2b1818;
+      box-shadow: 0 0 35px rgba(100, 0, 0, 0.35), inset 0 0 25px rgba(0, 0, 0, 0.95);
+      border-radius: 4px;
+      padding: 35px;
+      position: relative;
+      z-index: 20;
+      margin: 20px 0;
+    }
+ 
+    /* Título */
+    .header-title {
+      font-family: 'Creepster', cursive;
+      color: #8b0000;
+      font-size: 2.4rem;
+      letter-spacing: 3px;
+      text-align: center;
+      text-shadow: 2px 2px 4px #000000, 0 0 12px rgba(139, 0, 0, 0.7);
+      border-bottom: 1px dashed #3a1e1e;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+ 
+    .chapter-tag {
+      font-size: 0.85rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+ 
+    /* Caixa de Diálogo/Texto */
+    .textbox {
+      background: #050507;
+      border: 1px solid #1c1515;
+      padding: 28px;
+      min-height: 240px;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #d1cccc;
+      margin-bottom: 25px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.95);
+      position: relative;
+    }
+ 
+    .textbox p {
+      margin-bottom: 14px;
+    }
+ 
+    .highlight {
+      color: #a93226;
+      font-weight: bold;
+      text-shadow: 0 0 6px rgba(169, 50, 38, 0.5);
+    }
+ 
+    .whisper {
+      font-style: italic;
+      color: #888899;
+      padding-left: 15px;
+      border-left: 2px solid #552222;
+      margin: 12px 0;
+    }
+ 
+    /* Cursor psicodélico/piscante do typewriter */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background-color: #8b0000;
+      margin-left: 4px;
+      animation: blink 0.8s infinite;
+      vertical-align: middle;
+    }
+ 
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+ 
+    /* Botões de Escolha */
+    .choices-title {
+      font-size: 0.85rem;
+      color: #773333;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+ 
+    .choice-btn {
+      display: block;
+      width: 100%;
+      background: #120e0f;
+      color: #b0a8a8;
+      border: 1px solid #331f1f;
+      padding: 15px 20px;
+      margin-bottom: 12px;
+      font-family: 'Special Elite', monospace;
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+ 
+    .choice-btn:hover {
+      background: #221012;
+      color: #ff4d4d;
+      border-color: #8b0000;
+      box-shadow: 0 0 12px rgba(139, 0, 0, 0.4);
+      padding-left: 25px;
+    }
+ 
+    .choice-btn::before {
+      content: ">";
+      margin-right: 10px;
+      color: #8b0000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+ 
+    .choice-btn:hover::before {
+      opacity: 1;
+    }
+ 
+    /* Status Bar */
+    .status-bar {
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #1a1414;
+      padding-top: 12px;
+    }
+ 
+    .pulse {
+      animation: pulse-animation 2.5s infinite;
+    }
+ 
+    @keyframes pulse-animation {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; text-shadow: 0 0 8px rgba(255, 0, 0, 0.8); }
+      100% { opacity: 0.7; }
+    }
+  </style>
 </head>
 <body>
-    
+ 
+  <div class="overlay"></div>
+ 
+  <div class="game-container">
+    <div class="chapter-tag">Hollow Creek • O Antagonista</div>
+    <div class="header-title">O LOOP</div>
+ 
+    <div class="textbox" id="text-display">
+      <div id="typed-content"></div><span class="cursor" id="cursor"></span>
+    </div>
+ 
+    <div id="choices-container">
+      <div class="choices-title" id="choices-label" style="display: none;">O que fazer agora?</div>
+      <div id="buttons-group"></div>
+    </div>
+ 
+    <div class="status-bar">
+      <span id="status-location">Local: Centro de Hollow Creek</span>
+      <span id="status-time">Horário: --:--</span>
+    </div>
+  </div>
+ 
+  <script>
+    const storyNodes = {
+      scene1: {
+        location: "Hollow Creek - Ruas Principais",
+        time: "14:30 PM (Dia)",
+        text: `<p>Quando o grupo percebe que não existe saída de Hollow Creek, a cidade deixa de ser apenas um mero cenário e se transforma no <span class="highlight">verdadeiro antagonista</span> desta história.</p>
+               <p>Durante o dia, as ruas parecem quase abandonadas. Algumas poucas pessoas caminham lentamente pelas calçadas, mas evitam rigorosamente qualquer tipo de contato visual.</p>
+               <p>Janelas de madeira rangem e se fecham imediatamente quando Arthur tenta conversar com algum morador. Crianças param de brincar na praça e congelam quando Noah se aproxima.</p>
+               <p class="whisper">Há uma sensação constante e sufocante de que todos nesta cidade conhecem algo sombrio que vocês ainda ignoram...</p>`,
+        choices: [
+          { text: "Aguardar a chegada da noite", target: "scene2" }
+        ]
+      },
+      scene2: {
+        location: "Hollow Creek - Onde a Iluminação Morre",
+        time: "02:16 AM (Noite)",
+        text: `<p>À noite, Hollow Creek muda completamente de face. Uma neblina espessa e gélida rasteja do chão e cobre todas as ruas.</p>
+               <p>A iluminação pública fraqueja. As luzes amareladas dos postes começam a piscar ritmicamente, zumbindo como insetos moribundos.</p>
+               <p>De repente, todos os relógios mecânicos e digitais da cidade travam em uníssono.</p>
+               <p class="highlight pulse">Os ponteiros marcam exatamente 02:17.</p>`,
+        choices: [
+          { text: "Prestar atenção ao silêncio ao redor", target: "scene3" }
+        ]
+      },
+      scene3: {
+        location: "Hollow Creek - Ruas Vazias",
+        time: "02:17 AM [CONGELADO]",
+        text: `<p>O vento simplesmente desaparece, levando consigo o último vestígio de ar fresco.</p>
+               <p>Os animais sumiram. Não há latidos de cães ao longe, nem o piar de corujas nas árvores secas. O silêncio torna-se quase <span class="highlight">insuportável</span>, pressionando os ouvidos do grupo como uma força física.</p>
+               <p>É quando os passos começam no asfalto molhado...</p>
+               <p class="whisper">Então... eles aparecem.</p>`,
+        choices: [
+          { text: "🔄 Recomeçar o trecho", target: "scene1" }
+        ]
+      }
+    };
+ 
+    let typingTimeout;
+ 
+    function typeWriter(htmlText, elementId, callback) {
+      const container = document.getElementById(elementId);
+      const cursor = document.getElementById('cursor');
+      container.innerHTML = '';
+      cursor.style.display = 'inline-block';
+ 
+      let i = 0;
+      let currentHTML = '';
+      
+      function type() {
+        if (i < htmlText.length) {
+          if (htmlText[i] === '<') {
+            let tag = '';
+            while (htmlText[i] !== '>' && i < htmlText.length) {
+              tag += htmlText[i];
+              i++;
+            }
+            tag += '>';
+            i++;
+            currentHTML += tag;
+          } else {
+            currentHTML += htmlText[i];
+            i++;
+          }
+          container.innerHTML = currentHTML;
+          typingTimeout = setTimeout(type, 12);
+        } else {
+          cursor.style.display = 'none';
+          if (callback) callback();
+        }
+      }
+      
+      type();
+    }
+ 
+    function renderNode(nodeKey) {
+      clearTimeout(typingTimeout);
+      const node = storyNodes[nodeKey];
+      
+      document.getElementById('status-location').innerText = "Local: " + node.location;
+      document.getElementById('status-time').innerText = "Horário: " + node.time;
+ 
+      const buttonsGroup = document.getElementById('buttons-group');
+      const choicesLabel = document.getElementById('choices-label');
+ 
+      buttonsGroup.innerHTML = '';
+      choicesLabel.style.display = 'none';
+ 
+      typeWriter(node.text, 'typed-content', () => {
+        choicesLabel.style.display = 'block';
+        node.choices.forEach(choice => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerText = choice.text;
+          btn.onclick = () => renderNode(choice.target);
+          buttonsGroup.appendChild(btn);
+        });
+      });
+    }
+ 
+    window.onload = () => renderNode('scene1');
+  </script>
 </body>
 </html>
+ 
