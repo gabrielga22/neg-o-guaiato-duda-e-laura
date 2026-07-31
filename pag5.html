@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -361,3 +362,393 @@
     </script>
 </body>
 </html>
+=======
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Sem Saída</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+     
+        :root {
+          --bg-color: #050505;
+          --text-color: #d1cfc0;
+          --accent-red: #8b0000;
+          --bright-red: #ff2222;
+          --vignette: rgba(0, 0, 0, 0.85);
+          --font-main: 'VT323', monospace;
+        }
+     
+        * {
+          box-sizing: border-box;
+          user-select: none;
+        }
+     
+        body, html {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--bg-color);
+          color: var(--text-color);
+          font-family: var(--font-main);
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+     
+        /* Efeito de Iluminação de Lanterna e Chuva Estática no Fundo */
+        .viewport {
+          position: relative;
+          width: 100%;
+          max-width: 800px;
+          height: 90vh;
+          max-height: 600px;
+          background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(20, 20, 30, 0.4) 0%, rgba(2, 2, 5, 0.95) 70%);
+          border: 2px solid #1a1a1a;
+          box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 0, 0, 0.8);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 2rem;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+     
+        /* Chuva no fundo */
+        .rain {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 10px);
+          animation: rainAnim 0.3s infinite linear;
+          opacity: 0.6;
+        }
+     
+        @keyframes rainAnim {
+          0% { background-position: 0 0; }
+          100% { background-position: 10px 100px; }
+        }
+     
+        /* Overlay Scanlines (Efeito de Monitor Antigo) */
+        .scanlines {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          background: linear-gradient(
+            rgba(18, 16, 16, 0) 50%,
+            rgba(0, 0, 0, 0.25) 50%
+          );
+          background-size: 100% 4px;
+          z-index: 10;
+        }
+     
+        /* Vinheta Sombria nas bordas */
+        .vignette {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          box-shadow: inset 0 0 100px var(--vignette);
+          z-index: 11;
+        }
+     
+        /* Caixa de Diálogo Principal */
+        .dialogue-box {
+          position: relative;
+          z-index: 5;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          margin-bottom: 1.5rem;
+          background: rgba(8, 8, 10, 0.7);
+          border: 1px solid #2a2a2a;
+          padding: 1.5rem;
+          border-radius: 4px;
+          box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
+          overflow-y: auto;
+        }
+     
+        .story-text {
+          font-size: 1.45rem;
+          line-height: 1.5;
+          letter-spacing: 1px;
+          white-space: pre-wrap;
+          margin: 0;
+          color: var(--text-color);
+          text-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+     
+        .story-text .speaker {
+          color: var(--bright-red);
+          font-weight: bold;
+        }
+     
+        .story-text .consequence {
+          color: #a9a9a9;
+          font-style: italic;
+          margin-top: 10px;
+          display: block;
+        }
+     
+        /* Painel de Escolhas */
+        .choices-container {
+          position: relative;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+     
+        .choice-btn {
+          background: rgba(15, 15, 20, 0.8);
+          color: #8a8a8a;
+          border: 1px solid #333;
+          padding: 0.8rem 1.2rem;
+          font-family: var(--font-main);
+          font-size: 1.2rem;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          outline: none;
+          position: relative;
+          overflow: hidden;
+        }
+     
+        .choice-btn:hover:not(:disabled) {
+          color: #fff;
+          background: rgba(40, 10, 10, 0.8);
+          border-color: var(--bright-red);
+          box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+          transform: translateX(5px);
+        }
+     
+        .choice-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+          border-color: #222;
+        }
+     
+        .choice-btn::before {
+          content: "> ";
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+     
+        .choice-btn:hover::before {
+          opacity: 1;
+          color: var(--bright-red);
+        }
+     
+        /* Scrollbar personalizada para a caixa de texto */
+        .dialogue-box::-webkit-scrollbar {
+          width: 6px;
+        }
+     
+        .dialogue-box::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.3);
+        }
+     
+        .dialogue-box::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 3px;
+        }
+     
+        .dialogue-box::-webkit-scrollbar-thumb:hover {
+          background: var(--accent-red);
+        }
+      </style>
+    </head>
+    <body>
+     
+      <div class="viewport" id="viewport">
+        <div class="rain"></div>
+        <div class="scanlines"></div>
+        <div class="vignette"></div>
+     
+        <div class="dialogue-box" id="dialogueBox">
+          <p class="story-text" id="storyText"></p>
+        </div>
+     
+        <div class="choices-container" id="choicesContainer">
+          <!-- Botões de escolha inseridos dinamicamente via JS -->
+        </div>
+      </div>
+     
+      <script>
+        // Dados da narrativa
+        const storyData = {
+          start: {
+            text: `Independentemente da escolha, o grupo percebe que sair da cidade é impossível.
+     
+    Arthur acelera pela estrada principal.
+    Depois vira à esquerda.
+    Depois à direita.
+    Depois retorna pela avenida.
+     
+    Após quase vinte minutos dirigindo...
+    O mesmo posto aparece novamente.
+    A mesma igreja.
+    O mesmo motel.
+    Tudo exatamente igual.
+    Até as gotas de chuva parecem cair da mesma forma.
+     
+    Noah bate no painel do carro.
+    — Isso não faz sentido!
+     
+    Arthur tenta novamente.
+    Mais uma vez.
+    E outra.
+    Sempre acabam voltando ao mesmo lugar.`,
+            choices: [
+              { text: "Avançar...", targetNode: "segundaEscolha" }
+            ]
+          },
+          segundaEscolha: {
+            text: `Arthur para o carro.
+    Todos permanecem em silêncio.
+    Lucas continua respirando com dificuldade.
+     
+    O que fazer?`,
+            choices: [
+              { text: "A) Continuar dirigindo. (Talvez exista outra saída)", targetNode: "opcaoA" },
+              { text: "B) Conversar com um morador.", targetNode: "opcaoB" },
+              { text: "C) Examinar Lucas.", targetNode: "opcaoC" }
+            ]
+          },
+          opcaoA: {
+            text: `Arthur tenta acelerar novamente, recusando-se a aceitar o impossível. Os quilômetros passam no odômetro, mas a paisagem é um looping eterno.
+     
+    • Arthur perde toda a esperança.
+    • O marcador de combustível nunca diminui, congelado no mesmo ponto.
+    • O espaço ao redor da cidade parece se dobrar sobre si mesmo.`,
+            choices: [
+              { text: "Tentar outra abordagem...", targetNode: "segundaEscolha" }
+            ]
+          },
+          opcaoB: {
+            text: `Arthur encosta o veículo. Pela penumbra e pela chuva forte, uma figura rítmica emerge das sombras da calçada.
+     
+    Um senhor se aproxima lentamente do capô. Seus olhos parecem opacos sob o banho de chuva.
+     
+    Ele se inclina em direção à janela e diz com uma voz rouca:
+    — "A cidade sempre devolve quem tenta fugir."`,
+            choices: [
+              { text: "Tentar outra abordagem...", targetNode: "segundaEscolha" }
+            ]
+          },
+          opcaoC: {
+            text: `Arthur se vira para o banco traseiro para checar o estado do amigo.
+     
+    Lucas abre lentamente os olhos, cobertos por uma névoa sombria.
+    Ele olha diretamente para Arthur.
+     
+    Sem mover a cabeça nem um milímetro, ele sussurra:
+    — "Não deixem eles sorrirem..."
+     
+    Imediatamente após as palavras, o monitor cardíaco improvisado apita. Sua pressão cai rapidamente.`,
+            choices: [
+              { text: "Tentar outra abordagem...", targetNode: "segundaEscolha" }
+            ]
+          }
+        };
+     
+        // Estado do motor do jogo
+        let currentNode = "start";
+        let isTyping = false;
+        let typeTimeout = null;
+        let currentFullText = "";
+     
+        const storyTextEl = document.getElementById("storyText");
+        const choicesContainerEl = document.getElementById("choicesContainer");
+        const viewportEl = document.getElementById("viewport");
+     
+        // Efeito sutil de lanterna seguindo o mouse
+        window.addEventListener("mousemove", (e) => {
+          const rect = viewportEl.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          viewportEl.style.setProperty("--mouse-x", `${x}%`);
+          viewportEl.style.setProperty("--mouse-y", `${y}%`);
+        });
+     
+        // Função de Efeito Typewriter
+        function typeWriter(text, index = 0) {
+          if (index === 0) {
+            isTyping = true;
+            storyTextEl.innerHTML = "";
+            clearChoices();
+          }
+     
+          if (index < text.length) {
+            storyTextEl.innerHTML += text.charAt(index);
+            document.getElementById("dialogueBox").scrollTop = document.getElementById("dialogueBox").scrollHeight;
+            typeTimeout = setTimeout(() => typeWriter(text, index + 1), 25);
+          } else {
+            isTyping = false;
+            renderChoices(storyData[currentNode].choices);
+          }
+        }
+     
+        // Pula a animação do texto ao clicar na caixa
+        document.getElementById("dialogueBox").addEventListener("click", () => {
+          if (isTyping) {
+            clearTimeout(typeTimeout);
+            storyTextEl.innerHTML = currentFullText;
+            isTyping = false;
+            renderChoices(storyData[currentNode].choices);
+          }
+        });
+     
+        function renderChoices(choices) {
+          clearChoices();
+          choices.forEach(choice => {
+            const button = document.createElement("button");
+            button.classList.add("choice-btn");
+            button.innerText = choice.text;
+            button.onclick = () => goToNode(choice.targetNode);
+            choicesContainerEl.appendChild(button);
+          });
+        }
+     
+        function clearChoices() {
+          choicesContainerEl.innerHTML = "";
+        }
+     
+        function goToNode(nodeKey) {
+          if (storyData[nodeKey]) {
+            currentNode = nodeKey;
+            currentFullText = storyData[nodeKey].text;
+            typeWriter(currentFullText);
+          }
+        }
+     
+        // Inicialização do Jogo
+        goToNode("start");
+      </script>
+    </body>
+    </html>
+     
+    <title>Document</title>
+</head>
+<body>
+   
+</body>
+</html>
+ 
+>>>>>>> a8beb05786feccaffd629a3d0b5d5e7cc0f3f1ef

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hollow Creek: O Primeiro Loop</title>
@@ -408,5 +409,595 @@ Logo em seguida, os olhos de Lucas se reviram e sua pressão cai drasticamente!`
     // Inicializa o Jogo
     renderScene("start");
   </script>
+=======
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02:17 — Visual Novel de Terror</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cinzel:wght@500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+background:#050505;
+overflow:hidden;
+font-family:"Special Elite", monospace;
+color:#ddd;
+
+}
+
+/* Fundo */
+
+body::before{
+
+content:"";
+position:fixed;
+inset:0;
+
+background:
+radial-gradient(circle at center,
+rgba(255,255,255,.06),
+transparent 35%),
+
+linear-gradient(rgba(0,0,0,.72),
+rgba(0,0,0,.95)),
+
+url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
+
+background-size:cover;
+background-position:center;
+filter:brightness(.28) grayscale(100%);
+z-index:-4;
+
+}
+
+/* Chuva */
+
+.rain{
+
+position:fixed;
+inset:0;
+pointer-events:none;
+background-image:
+linear-gradient(
+transparent 0%,
+rgba(255,255,255,.08) 100%);
+background-size:2px 40px;
+opacity:.18;
+animation:rain .25s linear infinite;
+z-index:-2;
+
+}
+
+@keyframes rain{
+
+from{transform:translateY(-40px);}
+to{transform:translateY(0px);}
+
+}
+
+/* Vinheta */
+
+.vignette{
+
+position:fixed;
+inset:0;
+pointer-events:none;
+
+background:radial-gradient(circle,
+transparent 15%,
+rgba(0,0,0,.65) 70%,
+black 100%);
+
+}
+
+/* Lanterna */
+
+.flashlight{
+
+position:fixed;
+inset:0;
+pointer-events:none;
+
+background:
+radial-gradient(circle at 50% 45%,
+transparent 0,
+transparent 180px,
+rgba(0,0,0,.72) 330px,
+rgba(0,0,0,.95) 100%);
+
+mix-blend-mode:multiply;
+
+}
+
+.container{
+
+max-width:900px;
+margin:auto;
+height:100vh;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:20px;
+
+}
+
+.dialog{
+
+width:100%;
+background:rgba(8,8,8,.90);
+
+border:2px solid #3d3d3d;
+box-shadow:
+0 0 35px rgba(0,0,0,.8),
+0 0 20px rgba(110,0,0,.18);
+
+padding:35px;
+
+border-radius:8px;
+
+position:relative;
+
+}
+
+.dialog:before{
+
+content:"";
+
+position:absolute;
+
+inset:6px;
+
+border:1px solid rgba(255,255,255,.05);
+
+pointer-events:none;
+
+}
+
+h1{
+
+font-family:"Cinzel", serif;
+
+color:#b62f2f;
+
+text-align:center;
+
+letter-spacing:3px;
+
+margin-bottom:20px;
+
+font-size:34px;
+
+text-shadow:0 0 10px rgba(255,0,0,.25);
+
+}
+
+#text{
+
+white-space:pre-line;
+
+font-size:20px;
+
+line-height:1.8;
+
+min-height:340px;
+
+text-shadow:0 0 4px black;
+
+}
+
+.buttons{
+
+margin-top:30px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+button{
+
+background:#1a1a1a;
+
+color:#ddd;
+
+border:1px solid #5d5d5d;
+
+padding:15px;
+
+font-family:"Special Elite";
+
+font-size:16px;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+button:hover{
+
+background:#2d1111;
+
+border-color:#9c2a2a;
+
+transform:translateX(6px);
+
+color:white;
+
+box-shadow:0 0 12px rgba(255,0,0,.25);
+
+}
+
+.hidden{
+
+display:none;
+
+}
+
+.footer{
+
+margin-top:18px;
+
+text-align:right;
+
+font-size:12px;
+
+color:#777;
+
+letter-spacing:2px;
+
+}
+
+.blink{
+
+animation:blink 1s infinite;
+
+}
+
+@keyframes blink{
+
+50%{opacity:0;}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="rain"></div>
+<div class="flashlight"></div>
+<div class="vignette"></div>
+
+<div class="container">
+
+<div class="dialog">
+
+<h1>02:17</h1>
+
+<div id="text"></div>
+
+<div class="buttons" id="buttons"></div>
+
+<div class="footer">
+Todos os relógios continuam marcando <span class="blink">02:17</span>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const scenes={
+
+intro:{
+text:`Nenhuma placa indicava seu nome.
+
+As casas eram de madeira escurecida pelo tempo.
+
+As vitrines pareciam não ser limpas havia décadas.
+
+Os postes iluminavam as ruas com uma luz amarelada e fraca.
+
+Todos os relógios marcavam exatamente 02:17.
+
+Enquanto Arthur dirigia lentamente, moradores surgiam atrás das cortinas.
+
+Ninguém falava.
+
+Todos apenas observavam o carro.
+
+Como se esperassem aquela chegada havia muitos anos.
+
+Noah quebrou o silêncio.
+
+— Eles estão olhando para nós...
+
+Evelyn respondeu em voz baixa.
+
+— Não...
+
+Ela olhava para o banco traseiro.
+
+— Eles estão olhando para o Lucas.
+
+O carro reduziu ainda mais a velocidade.
+
+A cidade parecia prender a respiração.`,
+
+choices:[
+{
+text:"Continuar...",
+next:"escolha"
+}
+]
+
+},
+
+escolha:{
+
+text:`PRIMEIRA ESCOLHA
+
+Um velho posto de gasolina aparece à esquerda.
+
+Logo adiante existe uma igreja abandonada.
+
+No fim da avenida, um pequeno motel ainda possui uma placa iluminada.
+
+Onde o grupo deve ir?`,
+
+choices:[
+
+{
+text:"⛽ Entrar no Posto de Gasolina",
+next:"posto"
+},
+
+{
+text:"⛪ Ir para a Igreja",
+next:"igreja"
+},
+
+{
+text:"🛏 Passar a noite no Motel",
+next:"motel"
+}
+
+]
+
+},
+
+posto:{
+
+text:`Arthur estaciona diante das bombas enferrujadas.
+
+O silêncio é interrompido apenas pelo rangido de uma placa balançando ao vento.
+
+No interior do posto, um velho sobrevivente os observa.
+
+Sem dizer uma palavra, entrega um diário coberto de poeira.
+
+Noah encara Arthur.
+
+"Pensei que você fosse embora..."
+
+Pela primeira vez desde que chegaram...
+
+ele sorri.
+
+✓ Noah ganha confiança em Arthur.
+
+✓ Primeiro diário encontrado.
+
+✓ Um sobrevivente foi encontrado.`,
+
+choices:[
+
+{
+text:"Fim desta demonstração",
+next:"fim"
+}
+
+]
+
+},
+
+igreja:{
+
+text:`Os portões da igreja se abrem sozinhos.
+
+O ar é pesado.
+
+Símbolos antigos cobrem todas as paredes.
+
+Evelyn toca um deles.
+
+A temperatura despenca.
+
+Arthur sente uma forte dor de cabeça.
+
+Uma criatura de olhos completamente negros aparece no altar.
+
+Ela permanece imóvel...
+
+como se apenas esperasse.
+
+✓ Evelyn encontra símbolos antigos.
+
+✓ A sanidade de Arthur diminui.
+
+✓ Uma nova criatura foi revelada.`,
+
+choices:[
+
+{
+text:"Fim desta demonstração",
+next:"fim"
+}
+
+]
+
+},
+
+motel:{
+
+text:`O letreiro luminoso pisca lentamente.
+
+Há energia...
+
+mas ninguém parece administrar o local.
+
+Os quartos estão limpos demais.
+
+Pela primeira vez desde a chegada...
+
+todos conseguem descansar.
+
+Às 02:17...
+
+TOC.
+
+TOC.
+
+TOC.
+
+Algo bate lentamente na porta.
+
+Não há passos.
+
+Não há respiração.
+
+Apenas as batidas.
+
+✓ O grupo recupera parte da calma.
+
+✓ Algo espera do lado de fora.`,
+
+choices:[
+
+{
+text:"Fim desta demonstração",
+next:"fim"
+}
+
+]
+
+},
+
+fim:{
+
+text:`Fim da primeira escolha.
+
+A estrada ainda continua.
+
+E a cidade...
+
+não pretende deixar ninguém ir embora.`,
+
+choices:[
+{
+text:"Jogar novamente",
+next:"intro"
+}
+]
+
+}
+
+};
+
+const text=document.getElementById("text");
+const buttons=document.getElementById("buttons");
+
+function typeWriter(content,callback){
+
+text.innerHTML="";
+buttons.innerHTML="";
+
+let i=0;
+
+const speed=22;
+
+function typing(){
+
+if(i<content.length){
+
+text.innerHTML+=content.charAt(i);
+
+window.scrollTo(0,document.body.scrollHeight);
+
+i++;
+
+setTimeout(typing,speed);
+
+}
+else{
+
+callback();
+
+}
+
+}
+
+typing();
+
+}
+
+function loadScene(name){
+
+const scene=scenes[name];
+
+typeWriter(scene.text,()=>{
+
+scene.choices.forEach(choice=>{
+
+const btn=document.createElement("button");
+
+btn.innerHTML=choice.text;
+
+btn.onclick=()=>{
+
+loadScene(choice.next);
+
+};
+
+buttons.appendChild(btn);
+
+});
+
+});
+
+}
+
+loadScene("intro");
+
+document.addEventListener("mousemove",e=>{
+
+const light=document.querySelector(".flashlight");
+
+light.style.background=`radial-gradient(circle at ${e.clientX}px ${e.clientY}px,
+transparent 0,
+transparent 170px,
+rgba(0,0,0,.72) 320px,
+rgba(0,0,0,.96) 100%)`;
+
+});
+
+</script>
+
+>>>>>>> a8beb05786feccaffd629a3d0b5d5e7cc0f3f1ef
 </body>
 </html>
