@@ -3,417 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hollow Creek: O Loop</title>
+    <title>Capítulo VI: A Morte de Lucas | Black Pine County</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+
     <style>
-        /* --- CSS RESET & BASE --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill:rgba(200,0,0,0.8);"><circle cx="10" cy="10" r="5"/></svg>'), auto; /* Cursor customizado vermelho */
         }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            color: #b0b0b0;
-            font-family: 'Courier New', Courier, monospace; /* Fonte máquina de escrever padrão */
-            overflow: hidden; /* Impede scroll da página */
+        body {
+            background-color: #060608;
+            color: #d1cdca;
+            font-family: 'Cinzel', serif;
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at center, rgba(40, 10, 10, 0.45) 0%, rgba(3, 3, 4, 0.98) 100%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(12, 5, 5, 0.95));
+            background-attachment: fixed;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        /* --- EFEITOS DE ATMOSFERA --- */
-        
-        /* Ruído visual de fundo (Grain) */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4EEoAAAABlBMVEUAAAD///+l2Z/dAAAAbUlEQVR4XuwYwQqAMAzb//9S6UVDm4M34Xit9S9XNBEpI6Kcz9fX09OTXAnI/H5+fT25EpD5/f76enIlIPMbcDoU0H7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7bE+7b55f5AF0OAnfL/7KCAAAAAElFTkSuQmCC');
-            opacity: 0.05;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Vinheta gótica (bordas escuras) */
-        .vignette {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* Efeito de iluminação sutil (lanterna) seguindo o mouse */
-        .flashlight {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,230,0.05) 0%, rgba(0,0,0,0) 30%);
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        /* --- CONTAINER DO JOGO --- */
-        #game-container {
-            position: relative;
-            width: 90%;
-            max-width: 800px;
-            height: 80vh;
-            max-height: 600px;
-            background-color: #050505;
-            border: 2px solid #202020;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(200,0,0,0.05);
-            display: flex;
-            flex-direction: column;
             padding: 20px;
-            z-index: 2;
         }
 
-        /* Borda desgastada gótica nas cantoneiras */
-        #game-container::before {
-            content: "";
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: rgba(14, 12, 12, 0.92);
+            border: 1px solid #4a1e1e;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(139, 0, 0, 0.25);
+            padding: 40px;
+            border-radius: 4px;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .container::before {
+            content: '';
             position: absolute;
-            top: -5px; left: -5px; right: -5px; bottom: -5px;
-            border: 1px solid #1a0000;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid rgba(139, 0, 0, 0.25);
             pointer-events: none;
         }
 
-        /* --- CAIXA DE DIÁLOGO --- */
-        #dialogue-section {
-            flex: 1;
-            overflow-y: auto; /* Permite scroll se o texto for longo */
-            padding-right: 10px;
-            margin-bottom: 20px;
+        header {
+            text-align: center;
+            border-bottom: 2px solid #4a1e1e;
+            padding-bottom: 25px;
+            margin-bottom: 35px;
         }
 
-        /* Scrollbar estilizada (suja/escura) */
-        #dialogue-section::-webkit-scrollbar { width: 5px; }
-        #dialogue-section::-webkit-scrollbar-track { background: #080808; }
-        #dialogue-section::-webkit-scrollbar-thumb { background: #300000; }
-
-        .text-node {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            visibility: hidden; /* Controlado pelo JS */
-        }
-
-        .text-node.visible {
-            visibility: visible;
-        }
-
-        /* Estilo para diálogos falados */
-        .character-speech {
-            color: #c0c0c0;
-            border-left: 3px solid #300000;
-            padding-left: 10px;
-            margin-left: 5px;
-        }
-
-        /* Estilo para pensamentos ou ênfase horrorosa */
-        .horror-emphasis {
-            color: #900;
-            font-weight: bold;
-            animation: flicker 2s infinite;
-        }
-
-        /* --- SEÇÃO DE ESCOLHAS --- */
-        #choices-section {
-            height: auto;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border-top: 1px solid #202020;
-            padding-top: 15px;
-        }
-
-        .choice-button {
+        .meta-tag {
+            font-family: 'Special Elite', cursive;
+            color: #8c7b75;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             display: block;
-            width: 100%;
-            background: none;
-            background-color: #0a0a0a;
-            border: 1px solid #303030;
-            color: #808080;
-            padding: 12px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1rem;
-            text-align: left;
-            transition: all 0.2s ease;
-            opacity: 0; /* Começa invisível */
-            transform: translateY(10px);
+            margin-bottom: 8px;
         }
 
-        .choice-button.show {
-            opacity: 1;
-            transform: translateY(0);
+        h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 2.8rem;
+            color: #b82323;
+            text-shadow: 2px 2px 10px #000;
+            letter-spacing: 2px;
+            line-height: 1.1;
         }
 
-        .choice-button:hover:not(:disabled) {
-            background-color: #1a0000;
-            border-color: #600000;
-            color: #ff4444;
-            box-shadow: 0 0 10px rgba(100, 0, 0, 0.3);
+        p {
+            margin-bottom: 20px;
+            font-size: 1.08rem;
+            text-align: justify;
+            color: #d1cdca;
         }
 
-        .choice-button:active:not(:disabled) {
-            transform: scale(0.98);
+        .story-text::first-letter {
+            font-family: 'Creepster', cursive;
+            font-size: 3.2rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 12px;
+            color: #b82323;
         }
 
-        /* --- ANIMAÇÕES --- */
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-            52% { opacity: 1; }
-            54% { opacity: 0.7; }
-            56% { opacity: 1; }
+        .death-quote-box {
+            background: rgba(20, 5, 5, 0.85);
+            border: 1px solid #6b2222;
+            border-left: 4px solid #b82323;
+            padding: 20px 25px;
+            margin: 25px 0;
+            font-family: 'Special Elite', cursive;
+            text-align: center;
         }
 
-        /* Esconde o elemento mas mantém espaço (para o efeito typewriter) */
-        .is-typing::after {
-            content: "|";
-            animation: flicker 0.5s infinite;
-            color: #900;
+        .death-words {
+            font-size: 1.5rem;
+            color: #f24e4e;
+            text-shadow: 0 0 10px rgba(242, 78, 78, 0.4);
+            display: block;
+            margin-top: 5px;
         }
 
+        .choices-section {
+            margin-top: 40px;
+            border-top: 1px dashed #4a1e1e;
+            padding-top: 30px;
+        }
+
+        .choices-title {
+            font-family: 'Special Elite', cursive;
+            text-align: center;
+            color: #e6b89c;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .choice-card {
+            background: rgba(10, 10, 12, 0.8);
+            border: 1px solid #332727;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .choice-card:hover {
+            border-color: #732828;
+            box-shadow: 0 0 15px rgba(115, 40, 40, 0.2);
+        }
+
+        .choice-header {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .choice-a .choice-header { color: #e66060; }
+        .choice-b .choice-header { color: #52c46e; } /* Correta */
+        .choice-c .choice-header { color: #e66060; }
+
+        .tag-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tag-correct { background: rgba(82, 196, 110, 0.15); border: 1px solid #52c46e; color: #52c46e; }
+        .tag-wrong { background: rgba(230, 96, 96, 0.15); border: 1px solid #e66060; color: #e66060; }
+
+        .outcome-text {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 15px;
+            border-radius: 3px;
+            margin-top: 10px;
+            border-left: 3px solid #4a4242;
+        }
+
+        .choice-a .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
+        .choice-b .outcome-text { border-left-color: #52c46e; color: #c0ebd0; }
+        .choice-c .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #59534f;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+            font-family: 'Special Elite', cursive;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2rem; }
+            p { font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="vignette"></div>
-    <div class="flashlight" id="flashlight"></div>
+    <main class="container">
+        <header>
+            <span class="meta-tag">Capítulo VI</span>
+            <h1>A MORTE DE LUCAS</h1>
+        </header>
 
-    <div id="game-container">
-        <div id="dialogue-section">
-            <div id="text-container">
-                <!-- Texto inserido pelo JS -->
+        <article>
+            <p class="story-text">
+                Avançando pelos dutos de drenagem sob a cidade, o grupo tentava alcançar a estação de rádio. No entanto, o rádio portátil começou a apitar ensurdecedoramente e o estado de Lucas piorou de forma drástica.
+            </p>
+
+            <p>
+                Ao encostá-lo na parede de pedra, os amigos viram suas pupilas tornarem-se totalmente pretas. Um sorriso inumano e sem emoção surgiu em seu rosto antes de proferir o aviso final:
+            </p>
+
+            <div class="death-quote-box">
+                ÚLTIMAS PALAVRAS DE LUCAS
+                <span class="death-words">"Ela encontrou vocês."</span>
             </div>
-            <!-- Elemento invisível para forçar o scroll para baixo -->
-            <div id="scroll-anchor"></div>
-        </div>
 
-        <div id="choices-section">
-            <!-- Botões inseridos pelo JS -->
-        </div>
-    </div>
+            <p>
+                O peito de Lucas parou de se mover. Do bolso do casaco, o Ídolo Negro rolou para a lama, rachando e brilhando em vermelho enquanto passos ecoavam pelas sombras do túnel.
+            </p>
 
-    <script>
-        /* --- CONFIGURAÇÃO DA NARRATIVA --- */
-        // Estrutura do jogo dividida em "nós" (cenas)
-        const story = {
-            scene1: {
-                text: [
-                    "O PRIMEIRO LOOP",
-                    "Independentemente da escolha anterior, uma certeza se instala no peito de todos: Hollow Creek não funciona como uma cidade comum."
-                ],
-                choices: [
-                    { text: "Arthur tenta sair.", target: "scene2" }
-                ]
-            },
-            scene2: {
-                text: [
-                    "Arthur segura firme o volante. O motor ronca, lutando contra a chuva pesada.",
-                    "Ele dirige durante quase vinte minutos pela estrada escura.",
-                    "Vira à esquerda em uma bifurcação antiga.",
-                    "Depois à direita, seguindo placas desgastadas.",
-                    "Segue em frente, a floresta opressora ladeando a pista.",
-                    "Finalmente, retorna pela avenida principal de Hollow Creek, esperando ver a saída da cidade."
-                ],
-                choices: [
-                    { text: "Então...", target: "scene3" }
-                ]
-            },
-            scene3: {
-                text: [
-                    "A luz dos faróis corta a neblina.",
-                    "O mesmo posto de gasolina abandonado.",
-                    "A mesma igreja de pedra gótica.",
-                    "O mesmo motel com o letreiro neon piscando fracamente.",
-                    "Tudo exatamente no mesmo lugar.",
-                    "Até as gotas de chuva pareciam cair da mesma maneira hipnótica e errada."
-                ],
-                choices: [
-                    { text: "Noah reage.", target: "scene4" }
-                ]
-            },
-            scene4: {
-                text: [
-                    "<span class='character-speech'>Noah soca o painel do carro com violência. O som abafado ecoa no interior claustrofóbico.</span>",
-                    "<span class='character-speech'>— Isso é impossível!</span>",
-                    "Arthur não responde. Ele acelera novamente, o pânico subindo pela garganta.",
-                    "O carro percorre quilômetros. O velocímetro sobe.",
-                    "Mas a estrada se dobra. A lógica falha.",
-                    "Eles sempre retornam ao mesmo ponto inicial."
-                ],
-                choices: [
-                    { text: "A compreensão de Evelyn.", target: "scene5" }
-                ]
-            },
-            scene5: {
-                text: [
-                    "O silêncio no carro só é quebrado pelo som dos limpadores de para-brisa.",
-                    "Foi então que Evelyn compreendeu. A verdade fria se instalou em sua mente.",
-                    "<span class='character-speech'>— Não estamos presos em uma cidade...</span>",
-                    "Ela respirou fundo, o ar parecendo faltar.",
-                    "<span class='character-speech'>Estamos presos <span class='horror-emphasis'>dentro</span> dela.</span>"
-                ],
-                choices: [
-                    { text: "O Loop continua...", target: "restart" } // Mecânica de fim/loop
-                ]
-            }
-        };
+            <!-- ESCOLHAS -->
+            <section class="choices-section">
+                <h2 class="choices-title">⚠️ O QUE FAZER DIANTE DO TRÁGICO FIM?</h2>
 
-        /* --- MOTOR DO JOGO (ENGINE) --- */
-        
-        const textContainer = document.getElementById('text-container');
-        const choicesSection = document.getElementById('choices-section');
-        const dialogueSection = document.getElementById('dialogue-section');
-        const scrollAnchor = document.getElementById('scroll-anchor');
-        
-        const TYPE_SPEED = 30; // Milissegundos por caractere
-        let isTyping = false;
-        let currentAudioSource = null;
+                <!-- OPÇÃO A -->
+                <div class="choice-card choice-a">
+                    <div class="choice-header">
+                        <span>A) Tentar carregar o corpo de Lucas</span>
+                        <span class="tag-status tag-wrong">Fim de Jogo</span>
+                    </div>
+                    <p>Deixar o artefato e tentar levar o corpo do amigo na fuga.</p>
+                    <div class="outcome-text">
+                        <strong>FALHA:</strong> O peso do corpo reduz drasticamente a velocidade do grupo. Sem a estátua, a entidade nos túneis os alcança e os soterra na escuridão.
+                    </div>
+                </div>
 
-        // Inicializa o Contexto de Áudio para sons sintéticos (sem arquivos)
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = AudioContext ? new AudioContext() : null;
+                <!-- OPÇÃO B (CORRETA) -->
+                <div class="choice-card choice-b">
+                    <div class="choice-header">
+                        <span>B) Pegar o Ídolo e fugir para a superfície</span>
+                        <span class="tag-status tag-correct">Caminho Correto</span>
+                    </div>
+                    <p>Evelyn guarda o Ídolo na mochila e o grupo deixa o corpo para trás para alcançar a torre de rádio.</p>
+                    <div class="outcome-text">
+                        <strong>Consequência Oculta:</strong> Eles emergem no topo da colina aos pés da Torre de Rádio. Do alto, veem a névoa cobrir toda Hollow Creek como um mar revolto.
+                    </div>
+                </div>
 
-        // Função para tocar um som curto de "tecla" (typewriter)
-        function playTypeSound() {
-            if (!audioCtx) return;
-            // Cria oscilador para som curto e grave
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'sine'; // Som suave
-            oscillator.frequency.setValueAtTime(100 + (Math.random() * 50), audioCtx.currentTime); // Frequência baixa aleatória
-            gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime); // Volume bem baixo
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.1);
-        }
+                <!-- OPÇÃO C -->
+                <div class="choice-card choice-c">
+                    <div class="choice-header">
+                        <span>C) Enfrentar a criatura no túnel</span>
+                        <span class="tag-status tag-wrong">Fim de Jogo</span>
+                    </div>
+                    <p>Noah tenta lutar contra o que se aproxima para vingar a morte de Lucas.</p>
+                    <div class="outcome-text">
+                        <strong>FALHA:</strong> A criatura é feita de sombras e névoa. Armas comuns são inúteis e Noah é arremessado contra as pedras, destruindo qualquer chance de sobrevivência do grupo.
+                    </div>
+                </div>
+            </section>
+        </article>
 
-        // Função principal do efeito Typewriter
-        function typeWriter(element, text, index, callback) {
-            if (index < text.length) {
-                isTyping = true;
-                
-                // Trata HTML (como tags span) para não digitar a tag caractere por caractere
-                if (text[index] === '<') {
-                    let tagEnd = text.indexOf('>', index);
-                    if (tagEnd !== -1) {
-                        element.innerHTML += text.substring(index, tagEnd + 1);
-                        index = tagEnd + 1;
-                        // Continua imediatamente após a tag
-                        typeWriter(element, text, index, callback);
-                        return;
-                    }
-                }
+        <footer>
+            <p>Avançando para o clímax no Capítulo VII através da Escolha B...</p>
+        </footer>
+    </main>
 
-                element.innerHTML += text[index];
-                
-                // Toca som a cada poucos caracteres para não ficar irritante
-                if (index % 3 === 0) playTypeSound();
-
-                // Auto-scroll para baixo enquanto digita
-                scrollAnchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                
-                setTimeout(() => typeWriter(element, text, index + 1, callback), TYPE_SPEED);
-            } else {
-                isTyping = false;
-                element.classList.remove('is-typing');
-                callback();
-            }
-        }
-
-        // Exibe um bloco de texto completo (múltiplos parágrafos) caractere por caractere
-        function displayTextBlock(textArray, callback) {
-            let pIndex = 0;
-
-            function nextParagraph() {
-                if (pIndex < textArray.length) {
-                    const p = document.createElement('p');
-                    p.classList.add('text-node', 'is-typing');
-                    textContainer.appendChild(p);
-                    p.classList.add('visible'); // Torna o container visível antes de digitar
-                    
-                    typeWriter(p, textArray[pIndex], 0, () => {
-                        pIndex++;
-                        // Pequena pausa entre parágrafos
-                        setTimeout(nextParagraph, 500);
-                    });
-                } else {
-                    if (callback) callback();
-                }
-            }
-            nextParagraph();
-        }
-
-        // Mostra os botões de escolha
-        function showChoices(choices) {
-            choicesSection.innerHTML = ''; // Limpa escolhas anteriores
-            
-            choices.forEach((choice, index) => {
-                const button = document.createElement('button');
-                button.classList.add('choice-btn', 'choice-button'); // Usando classes corretas
-                button.innerHTML = `> ${choice.text}`;
-                
-                button.addEventListener('click', () => {
-                    if (!isTyping) {
-                        if (choice.target === 'restart') {
-                            location.reload(); // Mecânica de Loop recarrega a página
-                        } else {
-                            renderScene(choice.target);
-                        }
-                    }
-                });
-                
-                choicesSection.appendChild(button);
-                
-                // Animação de entrada dos botões (fade in cascata)
-                setTimeout(() => {
-                    button.classList.add('show');
-                }, index * 300 + 500);
-            });
-        }
-
-        // Função principal para renderizar uma cena
-        function renderScene(sceneId) {
-            const scene = story[sceneId];
-            if (!scene) return;
-
-            choicesSection.innerHTML = ''; // Esconde escolhas enquanto digita
-            
-            // Opcional: Limpar texto anterior a cada cena ou acumular?
-            // Para visual novel gótica, acumular parece mais opressor.
-            // textContainer.innerHTML = ''; 
-
-            displayTextBlock(scene.text, () => {
-                showChoices(scene.choices);
-            });
-        }
-
-        /* --- EFEITOS INTERATIVOS --- */
-        
-        // Efeito da lanterna seguindo o mouse
-        const flashlight = document.getElementById('flashlight');
-        window.addEventListener('mousemove', e => {
-            flashlight.style.setProperty('--x', e.clientX + 'px');
-            flashlight.style.setProperty('--y', e.clientY + 'px');
-        });
-
-        /* --- INICIALIZAÇÃO --- */
-        
-        // Inicia o jogo na primeira cena
-        // Nota: Navegadores modernos bloqueiam áudio automático.
-        // O som só tocará após a primeira interação (clique) do usuário.
-        renderScene('scene1');
-
-    </script>
 </body>
 </html>
