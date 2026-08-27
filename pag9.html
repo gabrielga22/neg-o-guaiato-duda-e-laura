@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capítulo IX: O Loop de Duas Semanas | Black Pine County</title>
+    <title>Capítulo IX: A Descida ao Subsolo | Black Pine County</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,100 +95,25 @@
             color: #b82323;
         }
 
-        .loop-box {
-            background: rgba(20, 5, 5, 0.85);
-            border: 1px solid #6b2222;
-            border-left: 4px solid #b82323;
-            padding: 20px 25px;
-            margin: 25px 0;
-            font-family: 'Special Elite', cursive;
-            text-align: center;
-        }
-
-        .loop-text {
-            font-size: 1.15rem;
-            color: #e6b89c;
-            display: block;
-            margin-top: 5px;
-        }
-
-        .choices-section {
-            margin-top: 40px;
-            border-top: 1px dashed #4a1e1e;
-            padding-top: 30px;
-        }
-
-        .choices-title {
-            font-family: 'Special Elite', cursive;
-            text-align: center;
-            color: #e6b89c;
-            font-size: 1.3rem;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-        }
-
-        .choice-card {
-            background: rgba(10, 10, 12, 0.8);
-            border: 1px solid #332727;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .choice-card:hover {
-            border-color: #732828;
-            box-shadow: 0 0 15px rgba(115, 40, 40, 0.2);
-        }
-
-        .choice-header {
-            font-family: 'Special Elite', cursive;
-            font-size: 1.15rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .choice-a .choice-header { color: #52c46e; } /* Correta */
-        .choice-b .choice-header { color: #e66060; }
-        .choice-c .choice-header { color: #e66060; }
-
-        .tag-status {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tag-correct { background: rgba(82, 196, 110, 0.15); border: 1px solid #52c46e; color: #52c46e; }
-        .tag-wrong { background: rgba(230, 96, 96, 0.15); border: 1px solid #e66060; color: #e66060; }
-
-        .outcome-text {
-            font-family: 'Special Elite', cursive;
-            font-size: 0.95rem;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px 15px;
-            border-radius: 3px;
-            margin-top: 10px;
-            border-left: 3px solid #4a4242;
-        }
-
-        .choice-a .outcome-text { border-left-color: #52c46e; color: #c0ebd0; }
-        .choice-b .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
-        .choice-c .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
-
+        /* --- RODAPÉ E LINK DE NAVEGAÇÃO --- */
         footer {
             margin-top: 40px;
             text-align: center;
-            font-size: 0.85rem;
-            color: #59534f;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding-top: 20px;
+        }
+
+        footer a {
             font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            color: #e65252;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e6b89c;
+            text-shadow: 0 0 8px rgba(230, 82, 82, 0.6);
         }
 
         @media (max-width: 600px) {
@@ -203,67 +128,20 @@
     <main class="container">
         <header>
             <span class="meta-tag">Capítulo IX</span>
-            <h1>O LOOP DE DUAS SEMANAS</h1>
+            <h1>A DESCIDA AO SUBSOLO</h1>
         </header>
 
         <article>
             <p class="story-text">
-                Procurar a arvore no cemitério causou uma fome avassaladora no grupo. Fracos e sem achar o local, eles voltaram à cidade para comer. Lá, descobriram com os moradores que o cemitério é uma ilusão e entenderam o segredo da fechadura.
+                Seguindo a trilha de raízes corrompidas pelo mofo, Arthur, Evelyn e Noah alcançaram a gigantesca Carvalha Morta. Sob suas raízes retorcidas, a porta de ferro pesada cedeu ao esforço combinado do grupo, revelando a escadaria de pedra que descia para a absoluta escuridão. O ar que subia de lá de baixo trazia o cheiro de poeira antiga, mofo e metal estéril. Cada degrau ecoava como uma contagem regressiva enquanto eles se aproximavam do verdadeiro coração de Hollow Creek.
             </p>
-
-            <div class="loop-box">
-                O TEMPO PRESO
-                <span class="loop-text">Duas semanas se passaram em um loop temporal agonizante antes que a Carvalha Morta finalmente surgisse.</span>
-            </div>
-
             <p>
-                No 14º dia, quase desistindo, eles finalmente encontraram a escadaria sob as raízes da árvore. No fundo, a <strong>Porta Vermelha</strong> os aguardava com seu mecanismo místico.
+                A lanterna piscava fracamente enquanto iluminava o corredor subterrâneo. No fim da passagem, uma fraca luz vermelha irradiava de uma cúpula aberta, indicando que o fim da jornada — e a resposta para todos os pesadelos — estava finalmente logo ali.
             </p>
-
-            <!-- ESCOLHAS -->
-            <section class="choices-section">
-                <h2 class="choices-title">⚠️ QUAL A DECISÃO DIANTE DA PORTA VERMELHA?</h2>
-
-                <!-- OPÇÃO A (CORRETA) -->
-                <div class="choice-card choice-a">
-                    <div class="choice-header">
-                        <span>A) Usar o Ídolo, o sangue e cruzar a porta</span>
-                        <span class="tag-status tag-correct">Caminho Correto</span>
-                    </div>
-                    <p>Encaixar o Ídolo, derramar uma gota de sangue e atravessar imediatamente para o outro lado.</p>
-                    <div class="outcome-text">
-                        <strong>Consequência Oculta:</strong> As trancas se abrem com um estrondo. O grupo dá as mãos e cruza a Porta Vermelha em direção ao desfecho final da história.
-                    </div>
-                </div>
-
-                <!-- OPÇÃO B -->
-                <div class="choice-card choice-b">
-                    <div class="choice-header">
-                        <span>B) Tentar arrombar a porta com uma marreta</span>
-                        <span class="tag-status tag-wrong">Fim de Jogo</span>
-                    </div>
-                    <p>Usar força bruta para tentar quebrar as dobradiças da porta sem usar o artefato.</p>
-                    <div class="outcome-text">
-                        <strong>FALHA:</strong> O impacto faz o mofo das raízes se descontrolar, soterrando a escadaria e prendendo o grupo sem ar.
-                    </div>
-                </div>
-
-                <!-- OPÇÃO C -->
-                <div class="choice-card choice-c">
-                    <div class="choice-header">
-                        <span>C) Hesitar e tentar voltar para a estrada</span>
-                        <span class="tag-status tag-wrong">Fim de Jogo</span>
-                    </div>
-                    <p>Desistir de atravessar por medo e tentar buscar outra saída na cidade.</p>
-                    <div class="outcome-text">
-                        <strong>FALHA:</strong> O ciclo de 48 anos se fecha. A névoa consome o cemitério e apaga a memória do grupo, prendendo-os para sempre em Hollow Creek.
-                    </div>
-                </div>
-            </section>
         </article>
 
         <footer>
-            <p>Avançando para o Grande Final no Capítulo X através da Escolha A...</p>
+            <a href="pag10.html">Capítulo X — O Véu da Realidade... →</a>
         </footer>
     </main>
 
