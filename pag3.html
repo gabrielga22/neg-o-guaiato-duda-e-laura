@@ -1,195 +1,202 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capítulo III: A Estrada Bloqueada | Black Pine County</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+<title>The Price of Knowledge</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            background-color: #060608;
-            color: #d1cdca;
-            font-family: 'Cinzel', serif;
-            line-height: 1.8;
-            background-image: 
-                radial-gradient(circle at center, rgba(30, 15, 15, 0.4) 0%, rgba(3, 3, 4, 0.98) 100%),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(12, 5, 5, 0.95));
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
-        .container {
-            max-width: 820px;
-            width: 100%;
-            background: rgba(14, 12, 12, 0.92);
-            border: 1px solid #4a1e1e;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(139, 0, 0, 0.2);
-            padding: 40px;
-            border-radius: 4px;
-            position: relative;
-            backdrop-filter: blur(5px);
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 6px; left: 6px; right: 6px; bottom: 6px;
-            border: 1px solid rgba(139, 0, 0, 0.25);
-            pointer-events: none;
-        }
+body{
 
-        header {
-            text-align: center;
-            border-bottom: 2px solid #4a1e1e;
-            padding-bottom: 25px;
-            margin-bottom: 35px;
-        }
+background:#060606;
+font-family:'Special Elite', monospace;
+color:#ddd;
+overflow:hidden;
 
-        .meta-tag {
-            font-family: 'Special Elite', cursive;
-            color: #8c7b75;
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 8px;
-        }
+background-image:
+linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.88)),
+url("casa.jpg");
 
-        h1 {
-            font-family: 'Creepster', cursive;
-            font-size: 2.8rem;
-            color: #b82323;
-            text-shadow: 2px 2px 10px #000;
-            letter-spacing: 2px;
-            line-height: 1.1;
-        }
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
 
-        p {
-            margin-bottom: 20px;
-            font-size: 1.08rem;
-            text-align: justify;
-            color: #d1cdca;
-        }
+}
 
-        .story-text::first-letter {
-            font-family: 'Creepster', cursive;
-            font-size: 3.2rem;
-            float: left;
-            line-height: 0.8;
-            padding-right: 12px;
-            color: #b82323;
-        }
+/* Chuva */
 
-        .event-box {
-            background: rgba(15, 10, 10, 0.7);
-            border: 1px solid #4a1e1e;
-            border-left: 4px solid #b82323;
-            padding: 20px 25px;
-            margin: 25px 0;
-            font-family: 'Special Elite', cursive;
-            color: #b5a9a5;
-        }
+.rain{
 
-        .choices-section {
-            margin-top: 40px;
-            border-top: 1px dashed #4a1e1e;
-            padding-top: 30px;
-        }
+position:fixed;
+width:100%;
+height:100%;
+pointer-events:none;
+background-image:
+linear-gradient(transparent 70%,rgba(255,255,255,.15));
 
-        .choices-title {
-            font-family: 'Special Elite', cursive;
-            text-align: center;
-            color: #e6b89c;
-            font-size: 1.3rem;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-        }
+animation:rain 0.25s linear infinite;
 
-        .choice-card {
-            background: rgba(10, 10, 12, 0.8);
-            border: 1px solid #332727;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
+opacity:.35;
 
-        .choice-card:hover {
-            border-color: #732828;
-            box-shadow: 0 0 15px rgba(115, 40, 40, 0.2);
-        }
+}
 
-        .choice-header {
-            font-family: 'Special Elite', cursive;
-            font-size: 1.15rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
+@keyframes rain{
 
-        .choice-a .choice-header { color: #e66060; }
-        .choice-b .choice-header { color: #52c46e; } /* Escolha Correta */
-        .choice-c .choice-header { color: #e66060; }
+from{background-position:0 0;}
+to{background-position:-40px 120px;}
 
-        .tag-status {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+}
 
-        .tag-correct { background: rgba(82, 196, 110, 0.15); border: 1px solid #52c46e; color: #52c46e; }
-        .tag-wrong { background: rgba(230, 96, 96, 0.15); border: 1px solid #e66060; color: #e66060; }
+/* Vinheta */
 
-        .outcome-text {
-            font-family: 'Special Elite', cursive;
-            font-size: 0.95rem;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px 15px;
-            border-radius: 3px;
-            margin-top: 10px;
-            border-left: 3px solid #4a4242;
-        }
+body::after{
 
-        .choice-a .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
-        .choice-b .outcome-text { border-left-color: #52c46e; color: #c0ebd0; }
-        .choice-c .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
+content:"";
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
 
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #59534f;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 20px;
-            font-family: 'Special Elite', cursive;
-        }
+box-shadow: inset 0 0 250px black;
 
-        @media (max-width: 600px) {
-            .container { padding: 20px; }
-            h1 { font-size: 2rem; }
-            p { font-size: 1rem; }
-        }
-    </style>
+pointer-events:none;
+
+}
+
+/* Caixa */
+
+.container{
+
+width:100%;
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:flex-end;
+
+padding:40px;
+
+}
+
+.dialog{
+
+width:900px;
+min-height:260px;
+
+background:rgba(0,0,0,.82);
+
+border:2px solid #4b0000;
+
+box-shadow:
+0 0 25px rgba(120,0,0,.6);
+
+padding:30px;
+
+border-radius:6px;
+
+}
+
+h1{
+
+color:#b70000;
+
+margin-bottom:15px;
+
+text-shadow:0 0 10px red;
+
+letter-spacing:2px;
+
+}
+
+#texto{
+
+font-size:22px;
+
+line-height:38px;
+
+min-height:120px;
+
+color:#ddd;
+
+}
+
+.buttons{
+
+margin-top:30px;
+
+display:flex;
+
+gap:15px;
+
+}
+
+button{
+
+padding:12px 30px;
+
+background:#550000;
+
+color:white;
+
+border:none;
+
+cursor:pointer;
+
+font-family:inherit;
+
+font-size:18px;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+background:#990000;
+
+transform:scale(1.05);
+
+box-shadow:0 0 15px red;
+
+}
+
+.radio{
+
+position:absolute;
+
+top:20px;
+
+left:20px;
+
+font-size:15px;
+
+color:#999;
+
+opacity:.8;
+
+animation:pisca 2s infinite;
+
+}
+
+@keyframes pisca{
+
+50%{opacity:.2;}
+
+}
+
+</style>
+
 </head>
 <body>
 
@@ -241,24 +248,124 @@
                     </div>
                 </div>
 
-                <!-- OPÇÃO C -->
-                <div class="choice-card choice-c">
-                    <div class="choice-header">
-                        <span>C) Acelerar por cima dos galhos</span>
-                        <span class="tag-status tag-wrong">Fim de Jogo</span>
-                    </div>
-                    <p>Noah tenta ultrapassar o obstáculo pelo barranco da lateral.</p>
-                    <div class="outcome-text">
-                        <strong>FALHA:</strong> O pneu estoura no impacto e o carro capota na ribanceira. Todos ficam presos e feridos no meio do nada enquanto a tempestade abafa seus gritos.
-                    </div>
-                </div>
-            </section>
-        </article>
+<script>
 
-        <footer>
-            <p>Avançando na narrativa com a Escolha B...</p>
-        </footer>
-    </main>
+const cenas=[
+
+{
+texto:"A estrada parecia não ter fim. A chuva castigava o para-brisa enquanto Arthur mantinha as mãos firmes no volante.",
+
+opcoes:[
+{txt:"Continuar",prox:1}
+]
+},
+
+{
+texto:"Lucas respirava com dificuldade no banco traseiro. O rádio ligava sozinho, transmitindo músicas antigas interrompidas por vozes que ninguém reconhecia.",
+
+opcoes:[
+{txt:"Desligar o rádio",prox:2},
+{txt:"Ignorar",prox:2}
+]
+},
+
+{
+texto:"De repente, uma árvore gigantesca bloqueava completamente a estrada. Arthur tentou dar ré... o motor apagou.",
+
+opcoes:[
+{txt:"Tentar ligar o carro",prox:3}
+]
+},
+
+{
+texto:"Quando o motor voltou a funcionar, a estrada atrás deles havia desaparecido. Restava apenas uma direção.",
+
+opcoes:[
+{txt:"Seguir em frente",prox:4}
+]
+},
+
+{
+texto:"Poucos minutos depois, a neblina começou a se abrir lentamente. No horizonte surgiu uma cidade antiga. Silenciosa. Escura. Parada no tempo.",
+
+opcoes:[
+{txt:"Entrar em Hollow Creek",prox:5}
+]
+},
+
+{
+texto:"Uma placa enferrujada balançava com o vento:\n\n'BEM-VINDO A HOLLOW CREEK'\n\nLogo abaixo, alguém havia escrito com tinta vermelha:\n\n'VOCÊ NÃO VAI EMBORA.'",
+
+opcoes:[
+{txt:"Começar a investigação",prox:6}
+]
+},
+
+{
+texto:"Fim do Prólogo.\n\nA cidade observava cada movimento deles. E, em algum lugar da escuridão... alguma coisa já sabia seus nomes.",
+
+opcoes:[]
+}
+
+];
+
+let atual=0;
+
+const texto=document.getElementById("texto");
+
+const botoes=document.getElementById("botoes");
+
+function escrever(msg){
+
+texto.innerHTML="";
+
+let i=0;
+
+const timer=setInterval(()=>{
+
+texto.innerHTML+=msg.charAt(i);
+
+i++;
+
+if(i>=msg.length){
+
+clearInterval(timer);
+
+mostrarBotoes();
+
+}
+
+},30);
+
+}
+
+function mostrarBotoes(){
+
+botoes.innerHTML="";
+
+cenas[atual].opcoes.forEach(op=>{
+
+const b=document.createElement("button");
+
+b.innerText=op.txt;
+
+b.onclick=()=>{
+
+atual=op.prox;
+
+escrever(cenas[atual].texto);
+
+};
+
+botoes.appendChild(b);
+
+});
+
+}
+
+escrever(cenas[0].texto);
+
+</script>
 
 </body>
 </html>
