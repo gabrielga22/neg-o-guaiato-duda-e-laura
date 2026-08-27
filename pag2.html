@@ -1,269 +1,312 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Black Pine County: A Descoberta</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
- 
-    body {
-      background-color: #050505;
-      color: #d1cdcd;
-      font-family: 'Special Elite', monospace;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow-x: hidden;
-      position: relative;
-    }
- 
-    /* Efeito de linhas CRT / TV antiga */
-    body::before {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-      z-index: 10;
-      background-size: 100% 3px, 6px 100%;
-      pointer-events: none;
-    }
- 
-    /* Vignette & Efeito Sombrio nas bordas */
-    .overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      box-shadow: inset 0 0 100px #000000, inset 0 0 150px #000000;
-      pointer-events: none;
-      z-index: 5;
-    }
- 
-    /* Container Principal */
-    .game-container {
-      width: 90%;
-      max-width: 800px;
-      background: #0d0d0f;
-      border: 2px solid #2a2020;
-      box-shadow: 0 0 30px rgba(139, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.9);
-      border-radius: 4px;
-      padding: 30px;
-      position: relative;
-      z-index: 20;
-      margin: 20px 0;
-    }
- 
-    /* Título do Capítulo */
-    .header-title {
-      font-family: 'Creepster', cursive;
-      color: #8b0000;
-      font-size: 2.2rem;
-      letter-spacing: 2px;
-      text-align: center;
-      text-shadow: 2px 2px 4px #000000, 0 0 10px rgba(139, 0, 0, 0.5);
-      border-bottom: 1px dashed #3a2222;
-      padding-bottom: 15px;
-      margin-bottom: 25px;
-    }
- 
-    .chapter-tag {
-      font-size: 0.85rem;
-      color: #777;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
- 
-    /* Caixa de Texto / Diálogo */
-    .textbox {
-      background: #08080a;
-      border: 1px solid #1f1a1a;
-      padding: 25px;
-      min-height: 220px;
-      line-height: 1.7;
-      font-size: 1.05rem;
-      color: #c4c0c0;
-      margin-bottom: 25px;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
-    }
- 
-    .textbox p {
-      margin-bottom: 12px;
-    }
- 
-    .highlight {
-      color: #a93226;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(169, 50, 38, 0.4);
-    }
- 
-    .whisper {
-      font-style: italic;
-      color: #888899;
-      padding-left: 15px;
-      border-left: 2px solid #553333;
-    }
- 
-    /* Opções e Botões */
-    .choices-title {
-      font-size: 0.9rem;
-      color: #884444;
-      margin-bottom: 15px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
- 
-    .choice-btn {
-      display: block;
-      width: 100%;
-      background: #141112;
-      color: #b0a8a8;
-      border: 1px solid #332222;
-      padding: 15px 20px;
-      margin-bottom: 12px;
-      font-family: 'Special Elite', monospace;
-      font-size: 0.95rem;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
- 
-    .choice-btn:hover {
-      background: #221214;
-      color: #ff4d4d;
-      border-color: #8b0000;
-      box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
-      padding-left: 25px;
-    }
- 
-    .status-bar {
-      margin-top: 20px;
-      font-size: 0.8rem;
-      color: #555;
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid #1a1a1a;
-      padding-top: 10px;
-    }
- 
-    .pulse {
-      animation: pulse-animation 2s infinite;
-    }
- 
-    @keyframes pulse-animation {
-      0% { opacity: 0.7; }
-      50% { opacity: 1; text-shadow: 0 0 8px rgba(255, 0, 0, 0.8); }
-      100% { opacity: 0.7; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo II: Descoberta | Black Pine County</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #060608;
+            color: #d1cdca;
+            font-family: 'Cinzel', serif;
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at center, rgba(40, 10, 10, 0.4) 0%, rgba(3, 3, 4, 0.98) 100%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(12, 5, 5, 0.95));
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: rgba(14, 12, 12, 0.92);
+            border: 1px solid #4a1e1e;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(139, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 4px;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid rgba(139, 0, 0, 0.25);
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid #4a1e1e;
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+
+        .meta-tag {
+            font-family: 'Special Elite', cursive;
+            color: #8c7b75;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 3rem;
+            color: #b82323;
+            text-shadow: 2px 2px 10px #000;
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.08rem;
+            text-align: justify;
+            color: #d1cdca;
+        }
+
+        .story-text::first-letter {
+            font-family: 'Creepster', cursive;
+            font-size: 3.2rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 12px;
+            color: #b82323;
+        }
+
+        .artifact-box {
+            background: rgba(20, 5, 5, 0.6);
+            border: 1px solid #6b2222;
+            border-left: 4px solid #b82323;
+            padding: 20px 25px;
+            margin: 25px 0;
+            font-family: 'Special Elite', cursive;
+        }
+
+        .artifact-title {
+            color: #e65252;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .artifact-box ul {
+            list-style: none;
+            padding-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .artifact-box li::before {
+            content: '🕯️ ';
+            font-size: 0.8rem;
+        }
+
+        .whisper-quote {
+            font-style: italic;
+            color: #f2a4a4;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-left: 2px solid #8c2b2b;
+            margin-top: 15px;
+            text-shadow: 0 0 5px rgba(184, 35, 35, 0.3);
+        }
+
+        .choices-section {
+            margin-top: 40px;
+            border-top: 1px dashed #4a1e1e;
+            padding-top: 30px;
+        }
+
+        .choices-title {
+            font-family: 'Special Elite', cursive;
+            text-align: center;
+            color: #e6b89c;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .choice-card {
+            background: rgba(10, 10, 12, 0.8);
+            border: 1px solid #332727;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .choice-card:hover {
+            border-color: #732828;
+            box-shadow: 0 0 15px rgba(115, 40, 40, 0.2);
+        }
+
+        .choice-header {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .choice-a .choice-header { color: #52c46e; }
+        .choice-b .choice-header { color: #e66060; }
+        .choice-c .choice-header { color: #e66060; }
+
+        .tag-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tag-correct { background: rgba(82, 196, 110, 0.15); border: 1px solid #52c46e; color: #52c46e; }
+        .tag-wrong { background: rgba(230, 96, 96, 0.15); border: 1px solid #e66060; color: #e66060; }
+
+        .outcome-text {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.95rem;
+            color: #a8a29e;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 15px;
+            border-radius: 3px;
+            margin-top: 10px;
+            border-left: 3px solid #4a4242;
+        }
+
+        .choice-a .outcome-text { border-left-color: #52c46e; color: #c0ebd0; }
+        .choice-b .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
+        .choice-c .outcome-text { border-left-color: #e66060; color: #f5c4c4; }
+
+        /* --- RODAPÉ E LINK DE NAVEGAÇÃO --- */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+        }
+
+        footer a {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            color: #e65252;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e6b89c;
+            text-shadow: 0 0 8px rgba(230, 82, 82, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2.2rem; }
+            p { font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
- 
-  <div class="overlay"></div>
- 
-  <div class="game-container">
-    <div class="chapter-tag">Black Pine County • 2003</div>
-    <div class="header-title">PRÓLOGO: A DESCOBERTA</div>
- 
-    <div class="textbox" id="text-display">
-      <!-- Texto inserido via JS -->
-    </div>
- 
-    <div id="choices-container">
-      <div class="choices-title" id="choices-label">O que fazer com Lucas?</div>
-      <div id="buttons-group"></div>
-    </div>
- 
-    <div class="status-bar">
-      <span>Local: Mansão Vidal - Porão</span>
-      <span>Horário: 02:17 AM</span>
-    </div>
-  </div>
- 
-  <script>
-    const storyNodes = {
-      start: {
-        text: `<p>No fundo do porão existe uma porta escondida atrás de uma estante pesada.</p>
-               <p>Dentro da sala secreta:</p>
-               <p>• Velas apagadas e derretidas<br>
-                  • Fotografias queimadas nas bordas<br>
-                  • Um círculo ritualístico desenhado no chão</p>
-               <p>E no centro do círculo, um objeto estranho...</p>
-               <p class="highlight pulse">O ÍDOLO NEGRO</p>
-               <p>Uma pequena estátua feita de algo parecido com madeira carbonizada... mas que <span class="highlight">pulsa como carne viva</span>.</p>
-               <p>Quando Lucas estende a mão e toca no objeto, seus olhos ficam brancos. Ele vê algo impossível:</p>
-               <p class="whisper">"Uma cidade cercada por floresta densa... Pessoas presas... Criaturas observando através das janelas... Um símbolo macabro entalhado no próprio céu..."</p>
-               <p>Uma voz ecoa diretamente dentro de suas mentes:</p>
-               <p class="whisper" style="color: #c0392b; font-weight: bold;">“Conhecimento exige espaço... E a mente humana paga o preço.”</p>`,
-        choices: [
-          { text: "A) Tirar Lucas imediatamente da casa", target: "choiceA" },
-          { text: "B) Continuar investigando a sala", target: "choiceB" },
-          { text: "C) Destruir o objeto profano", target: "choiceC" }
-        ]
-      },
-      choiceA: {
-        text: `<p class="highlight">ESCOLHA: FUGIR DA CASA</p>
-               <p>O pânico toma conta do grupo. Vocês agarram Lucas pelos ombros e o puxam para fora do círculo ritualístico. Ele balbucia palavras desconexas enquanto é arrastado para a tempestade lá fora.</p>
-               <p>Vocês conseguem fugir de Black Pine County antes que a noite termine. <span class="highlight">Lucas continua vivo por mais tempo...</span></p>
-               <p>Porém, sem que nenhum dos outros perceba, Lucas segura firme no bolso do casaco.</p>
-               <p class="whisper">O Ídolo Negro foi trazido com vocês. A maldição não ficou na mansão.</p>`,
-        choices: [
-          { text: "🔄 Recomeçar a cena", target: "start" }
-        ]
-      },
-      choiceB: {
-        text: `<p class="highlight">ESCOLHA: CONTINUAR INVESTIGANDO</p>
-               <p>Mesmo com o horror estampado no rosto de Lucas, o grupo decide vasculhar o restante da sala secreta. Evelyn encontra diários antigos e documentos com marcas de queimadura.</p>
-               <p>Os papéis mencionam repetidamente uma cidade isolada chamada <span class="highlight">“Hollow Creek”</span> e os rituais da família Vidal.</p>
-               <p>Contudo, o preço do conhecimento é alto. A respiração de Lucas fica fraca, seus ouvidos começam a sangrar e <span class="highlight">sua sanidade deteriora rapidamente</span>.</p>
-               <p class="whisper">Vocês ganharam respostas valiosas para o futuro... mas perderam uma parte de Lucas para sempre.</p>`,
-        choices: [
-          { text: "🔄 Recomeçar a cena", target: "start" }
-        ]
-      },
-      choiceC: {
-        text: `<p class="highlight">ESCOLHA: DESTRUIR O OBJETO</p>
-               <p>Tomado pelo medo e pelo instinto de proteção, Noah dá um passo à frente e golpeia o Ídolo Negro com força para destruí-lo.</p>
-               <p>No instante do impacto, um mofo negro e um pulso de energia violento explodem do porão. A estrutura da mansão estala, e as tábuas do chão se contorcem.</p>
-               <p class="highlight">Algo gigante e adormecido parece ter acordado na floresta ao redor da casa.</p>
-               <p>Noah é arremessado contra a parede de pedra, sofrendo ferimentos graves no braço e nas costelas. O ar no porão se torna irrespirável...</p>`,
-        choices: [
-          { text: "🔄 Recomeçar a cena", target: "start" }
-        ]
-      }
-    };
- 
-    function renderNode(nodeKey) {
-      const node = storyNodes[nodeKey];
-      const textDisplay = document.getElementById('text-display');
-      const buttonsGroup = document.getElementById('buttons-group');
- 
-      textDisplay.innerHTML = node.text;
-      buttonsGroup.innerHTML = '';
- 
-      node.choices.forEach(choice => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = choice.text;
-        btn.onclick = () => renderNode(choice.target);
-        buttonsGroup.appendChild(btn);
-      });
-    }
- 
-    window.onload = () => renderNode('start');
-  </script>
+
+    <main class="container">
+        <header>
+            <span class="meta-tag">Capítulo II</span>
+            <h1>DESCOBERTA</h1>
+        </header>
+
+        <article>
+            <p class="story-text">
+                O ar no porão é pesado, frio e cheira a mofo e cera queimada. Escondida atrás de uma estante pesada de madeira carcomida, Lucas descobre uma passagem secreta para um compartimento oculto.
+            </p>
+
+            <div class="artifact-box">
+                <span class="artifact-title">O Ídolo Negro</span>
+                <ul>
+                    <li>Velas apagadas e fotografias com rostos queimados</li>
+                    <li>Um círculo ritualístico traçado no chão</li>
+                    <li>Uma estátua de madeira carbonizada que <strong>pulsa como carne viva</strong></li>
+                </ul>
+
+                <div class="whisper-quote">
+                    "Conhecimento exige espaço. E a mente humana paga o preço."
+                </div>
+            </div>
+
+            <p>
+                Ao tocar no objeto, Lucas é tomado por visões de uma cidade isolada, criaturas nas janelas e um símbolo entalhado no próprio céu. Ele cai de joelhos, sufocando um grito enquanto seus olhos começam a sangrar. O tempo está se esgotando.
+            </p>
+
+            <!-- ESCOLHAS -->
+            <section class="choices-section">
+                <h2 class="choices-title">⚠️ QUAL DECISÃO O GRUPO DEVE TOMAR?</h2>
+
+                <!-- OPÇÃO A (CORRETA) -->
+                <div class="choice-card choice-a">
+                    <div class="choice-header">
+                        <span>A) Tirar Lucas imediatamente da casa</span>
+                        <span class="tag-status tag-correct">Caminho Correto</span>
+                    </div>
+                    <p>O grupo corre até o carro e foge sob a chuva torrencial. Lucas sobrevive ao colapso e recupera a consciência aos poucos.</p>
+                    <div class="outcome-text">
+                        <strong>Consequência Oculta:</strong> Na pressa da fuga, a mão trêmula de Lucas fechou-se sobre o Ídolo Negro. O objeto agora está escondido em seu casaco, pulsando em sintonia com seu coração.
+                    </div>
+                </div>
+
+                <!-- OPÇÃO B (ERRADA) -->
+                <div class="choice-card choice-b">
+                    <div class="choice-header">
+                        <span>B) Continuar investigando o porão</span>
+                        <span class="tag-status tag-wrong">Fim de Jogo</span>
+                    </div>
+                    <p>Evelyn encontra documentos antigos mencionando "Hollow Creek", mas a demora custa caro.</p>
+                    <div class="outcome-text">
+                        <strong>FALHA:</strong> O transe de Lucas se aprofunda e ele entra em convulsão. A mente dele cede completamente ao peso da entidade, deixando seus olhos pretos. Lucas está permanentemente perdido.
+                    </div>
+                </div>
+
+                <!-- OPÇÃO C (ERRADA) -->
+                <div class="choice-card choice-c">
+                    <div class="choice-header">
+                        <span>C) Tentar destruir o Ídolo Negro</span>
+                        <span class="tag-status tag-wrong">Fim de Jogo</span>
+                    </div>
+                    <p>Noah golpeia a estátua com um pé-de-cabra para quebrar a maldição.</p>
+                    <div class="outcome-text">
+                        <strong>FALHA:</strong> O porão reage violentamente: o chão se contorce e a onda de choque arremessa Noah contra a parede, fraturando suas costelas. Na floresta ao redor, uivos terríveis ecoam... algo antigo acordou.
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <footer>
+            <a href="pag3.html">Capítulo III — Seguir pela estrada... →</a>
+        </footer>
+    </main>
+
 </body>
 </html>
- 
-</body>
-</html>
- 
