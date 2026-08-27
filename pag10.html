@@ -4,26 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Capítulo X: O Véu da Realidade | Black Pine County</title>
- 
-    <!-- Google Fonts -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
- 
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
- 
+
         body {
             background-color: #030304;
             color: #d1cdca;
             font-family: 'Cinzel', serif;
             line-height: 1.8;
-            background-image:
-                radial-gradient(circle at center, rgba(40, 10, 10, 0.5) 0%, rgba(2, 2, 3, 0.99) 100%);
+            background-image: radial-gradient(circle at center, rgba(40, 10, 10, 0.5) 0%, rgba(2, 2, 3, 0.99) 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -31,43 +29,25 @@
             align-items: center;
             padding: 20px;
         }
- 
+
         .container {
-            max-width: 840px;
+            max-width: 820px;
             width: 100%;
             background: rgba(10, 8, 8, 0.95);
             border: 1px solid #5a1a1a;
             box-shadow: 0 0 50px rgba(139, 0, 0, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.9);
-            padding: 45px;
+            padding: 40px;
             border-radius: 4px;
             position: relative;
         }
- 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 6px; left: 6px; right: 6px; bottom: 6px;
-            border: 1px solid rgba(139, 0, 0, 0.3);
-            pointer-events: none;
-        }
- 
+
         header {
             text-align: center;
             border-bottom: 2px solid #5a1a1a;
             padding-bottom: 25px;
             margin-bottom: 35px;
         }
- 
-        .meta-tag {
-            font-family: 'Special Elite', cursive;
-            color: #a33838;
-            font-size: 0.9rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 8px;
-        }
- 
+
         h1 {
             font-family: 'Creepster', cursive;
             font-size: 3rem;
@@ -76,14 +56,14 @@
             letter-spacing: 2px;
             line-height: 1.1;
         }
- 
+
         p {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             font-size: 1.08rem;
             text-align: justify;
             color: #d1cdca;
         }
- 
+
         .story-text::first-letter {
             font-family: 'Creepster', cursive;
             font-size: 3.5rem;
@@ -92,160 +72,161 @@
             padding-right: 12px;
             color: #cc2222;
         }
- 
+
         .dialogue-box {
-            background: rgba(18, 3, 3, 0.95);
+            background: rgba(15, 3, 3, 0.9);
             border-left: 4px solid #cc2222;
             padding: 20px 25px;
-            margin: 30px 0;
-            font-family: 'Special Elite', cursive;
-            color: #e6b89c;
-            line-height: 1.7;
-        }
- 
-        .dialogue-box span {
-            color: #ff6b6b;
-            display: block;
-            margin-top: 8px;
-        }
- 
-        .vhs-list {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px dashed #4a1e1e;
-            padding: 20px;
             margin: 25px 0;
             font-family: 'Special Elite', cursive;
-            font-size: 0.95rem;
-            color: #a89f91;
+            color: #e6b89c;
         }
- 
-        .vhs-list ul {
-            list-style: none;
-            padding-left: 10px;
-        }
- 
-        .vhs-list li {
-            margin-bottom: 8px;
-        }
- 
-        .vhs-list li::before {
-            content: "📼 ";
-        }
- 
+
         .final-reveal {
             background: #000;
-            border: 1px solid #5a1a1a;
-            padding: 35px 25px;
-            margin-top: 40px;
+            border: 1px solid #4a1e1e;
+            padding: 30px;
+            margin-top: 30px;
             text-align: center;
             font-family: 'Special Elite', cursive;
-            box-shadow: 0 0 35px rgba(0, 0, 0, 1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 1);
         }
- 
+
         .final-reveal p {
             text-align: center;
             color: #fff;
             margin-bottom: 15px;
         }
- 
+
         .final-question {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #cc2222 !important;
             letter-spacing: 2px;
             margin-top: 20px;
             text-transform: uppercase;
         }
- 
-        .knock-effect {
-            letter-spacing: 8px;
-            color: #8c7b75;
-            font-size: 1.1rem;
-            margin: 20px 0;
+
+        /* --- ESTILIZAÇÃO DO BOTÃO/CLIQUE NATIVO (SEM JS) --- */
+        details {
+            width: 100%;
+            cursor: pointer;
         }
- 
+
+        summary {
+            list-style: none;
+            outline: none;
+            text-align: center;
+            font-family: 'Special Elite', cursive;
+            color: #cc2222;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            padding: 20px;
+            background: rgba(20, 5, 5, 0.6);
+            border: 1px dashed #5a1a1a;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            text-transform: uppercase;
+        }
+
+        summary:hover {
+            background: rgba(40, 10, 10, 0.8);
+            color: #ff3333;
+            box-shadow: 0 0 15px rgba(204, 34, 34, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        details[open] summary {
+            display: none; /* Esconde o botão de clique após abrir a história */
+        }
+
+        .content-hidden {
+            margin-top: 20px;
+        }
+
         footer {
-            margin-top: 50px;
+            margin-top: 40px;
             text-align: center;
             font-size: 0.85rem;
-            color: #4a4242;
+            color: #59534f;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding-top: 20px;
             font-family: 'Special Elite', cursive;
         }
- 
-        @media (max-width: 600px) {
-            .container { padding: 22px; }
-            h1 { font-size: 2.2rem; }
-            p { font-size: 1rem; }
-        }
     </style>
 </head>
 <body>
- 
+
     <main class="container">
         <header>
-            <span class="meta-tag">Capítulo X — O Grande Final</span>
             <h1>O VÉU DA REALIDADE</h1>
         </header>
- 
+
         <article>
-            <p class="story-text">
-                Após reunirem todas as fitas VHS, encontrarem o diário de Lucas, resolverem os enigmas das minas e atravessarem a pesada Porta Vermelha, Arthur, Evelyn e Noah chegam ao lugar que todos acreditavam ser o coração de Hollow Creek. Não existe uma sala. Não existe um altar. Não existe uma criatura colossal esperando por eles. Existe apenas uma estrada — a mesma por onde entraram na cidade —, estendendo-se infinitamente sob a névoa.
-            </p>
- 
-            <p>
-                No centro do asfalto está o <strong>Ídolo Negro</strong>, imóvel, cercado por milhares de placas enferrujadas com nomes de pessoas que tentaram fugir. Ao lado, centenas de carros abandonados contêm esqueletos, malas abertas e fotografias velhas de famílias que jamais voltaram para casa.
-            </p>
- 
-            <p>
-                Evelyn encontra uma alçapão de metal enterrado no asfalto. Abaixo dele, descobre-se um arquivo subterrâneo de dimensão impossível: prateleiras infinitas guardando caixas com milhões de fitas VHS etiquetadas com nomes.
-            </p>
- 
-            <div class="vhs-list">
-                <p style="text-align: left; color: #cc2222; margin-bottom: 10px;"><strong>REGISTROS ENCONTRADOS NAS PRATELEIRAS:</strong></p>
-                <ul>
-                    <li><strong>Arthur Hale — Tentativa 247:</strong> Arthur enlouquece após dias no nevoeiro, assassina o grupo e tira a própria vida.</li>
-                    <li><strong>Arthur Hale — Tentativa 183:</strong> Evelyn morre primeiro nas minas abandonadas.</li>
-                    <li><strong>Arthur Hale — Tentativa 102:</strong> Lucas jamais encosta no Ídolo Negro.</li>
-                    <li><strong>Arthur Hale — Tentativa 12:</strong> Arthur chega completamente sozinho à cidade.</li>
-                </ul>
-            </div>
- 
-            <p>
-                Diante do pânico de perceberem que todas as tentativas anteriores terminaram em fracasso, Lucas surge intacto no corredor. Ele explica a verdade aterradora: Hollow Creek não aprisiona pessoas, aprisiona histórias. Eles nunca estiveram vivos e jamais possuíram livre-arbítrio.
-            </p>
- 
-            <div class="dialogue-box">
-                "Quem escreve essas histórias? Quem observa. Toda vez que você clica em iniciar ou abre este livro, Hollow Creek nasce outra vez..."
-                <span>— Lucas Reed</span>
-            </div>
- 
-            <p>
-                Todas as televisões do arquivo ligam simultaneamente, mostrando pessoas reais sentadas em quartos e salas jogando e lendo a história do grupo. Os sobreviventes percebem que alguém sempre tomou cada decisão por eles.
-            </p>
- 
-            <p>
-                A câmera recua para a última prateleira. Nela, uma etiqueta traz <strong>o seu nome</strong>. Arthur, Evelyn e Noah viram-se para a tela, mas seus olhares passam direto por você... fixando-se em algo parado logo atrás da sua cadeira. O sorriso congelado dos Observadores surge no rosto de cada um deles.
-            </p>
- 
-            <!-- REVELAÇÃO FINAL DA QUARTA PAREDE -->
-            <div class="final-reveal">
-                <div class="knock-effect">TOC... TOC... TOC...</div>
+            <details>
+                <summary>▶ CLIQUE AQUI PARA ABRIR A PORTA VERMELHA E REVELAR O FINAL</summary>
                 
-                <p>Obrigado por abrir a Porta Vermelha.</p>
-                
-                <p class="final-question">Eles conseguiram sair? Talvez.</p>
-                
-                <p style="color: #8c7b75; font-size: 0.95rem; margin-top: 15px;">
-                    Mas enquanto você acompanhava a história deles... quem esteve observando você?
-                </p>
-            </div>
+                <div class="content-hidden">
+                    <p class="story-text">
+                        Depois de reunir todas as fitas VHS, encontrar as páginas do diário de Lucas e abrir a Porta Vermelha, Arthur, Evelyn e Noah chegaram ao que julgavam ser o coração de Hollow Creek. Contudo, não havia um altar ou uma criatura colossal. Apenas uma estrada infinita, idêntica àquela por onde entraram, com o Ídolo Negro imóvel no asfalto e cercado por centenas de carros abandonados de pessoas que também tentaram escapar.
+                    </p>
+
+                    <p>
+                        Evelyn encontrou uma porta de metal enterrada no asfalto e a abriu, revelando um enorme arquivo subterrâneo de prateleiras infinitas preenchidas com milhões de fitas VHS rotuladas com nomes. Ao colocar a fita de sua própria tentativa no televisor, Arthur assistiu à gravação de sua chegada sob a chuva, seguida pela loucura que o faz matar Noah, depois Evelyn e, por fim, tirar a própria vida. Testando outras fitas, viram que havia milhares de versões de suas vidas, todas terminando em fracasso absoluto.
+                    </p>
+
+                    <div class="dialogue-box">
+                        Noah recua alguns passos, com os olhos arregalados fitando as prateleiras sem fim.<br>
+                        — Isso... isso é impossível... como pode haver tantas versões de nós?
+                    </div>
+
+                    <p>
+                        É então que Lucas aparece. Não como um fantasma ou ilusão, mas firme, com um sorriso humano e melancólico.
+                    </p>
+
+                    <div class="dialogue-box">
+                        — Vocês finalmente chegaram onde eu sempre tentei impedir — diz Lucas calmamente.<br><br>
+                        Arthur aperta o cabo da lanterna, a voz trêmula: — O que é este lugar, Lucas? O que está acontecendo?<br><br>
+                        Lucas aponta para as caixas nas prateleiras: — Aqui ficam todas as histórias que fracassaram.<br><br>
+                        Evelyn, contendo as lágrimas, pergunta: — Então estamos presos em um ciclo?<br><br>
+                        Lucas balança a cabeça negativamente: — Não. Pior. Vocês nunca estiveram vivos. Hollow Creek não aprisiona pessoas... Ela aprisiona histórias. Cada vez que alguém encontra o Ídolo Negro, uma nova versão nasce. E quando ela termina, é armazenada aqui. Nenhuma dessas pessoas possuía livre-arbítrio.<br><br>
+                        Arthur sente o sangue gelar: — Então... quem escreve essas histórias?<br><br>
+                        Lucas olha diretamente para a frente, encarando a escuridão além dos personagens: — Quem observa.
+                    </div>
+
+                    <p>
+                        Nesse instante, todas as televisões da sala se acendem ao mesmo tempo. Cada tela exibe o reflexo de um quarto, de uma sala, de uma pessoa sentada diante de um monitor, segurando comandos e decidindo cada passo da jornada deles.
+                    </p>
+
+                    <p>
+                        Lucas dá um passo à frente, quebrando a barreira entre o cenário e a tela, encarando diretamente quem está do outro lado:
+                    </p>
+
+                    <div class="dialogue-box">
+                        — Você realmente acreditava que estava tentando salvá-los? — Lucas sussurra para você. — Toda vez que você inicia um novo jogo... Hollow Creek nasce outra vez.
+                    </div>
+
+                    <div class="final-reveal">
+                        <p>Atrás do grupo, uma última prateleira surge na penumbra. Nela há apenas uma etiqueta, gravada com o seu próprio nome.</p>
+                        <p class="final-question">Hollow Creek nunca existiu para prender pessoas.</p>
+                        <p style="color: #8c7b75; font-size: 0.95rem; margin-top: 15px;">
+                            Ela existe para prender quem observa.
+                        </p>
+                    </div>
+
+                    <footer>
+                        <p>Três batidas ecoam no silêncio.<br>Toc... Toc... Toc...</p>
+                        <p style="margin-top: 10px; color: #cc2222;">FIM DE JOGO — OBRIGADO POR ABRIR A PORTA VERMELHA.</p>
+                    </footer>
+                </div>
+            </details>
         </article>
- 
-        <footer>
-            <p>FIM DE JOGO — BLACK PINE COUNTY</p>
-        </footer>
     </main>
- 
+
 </body>
 </html>
